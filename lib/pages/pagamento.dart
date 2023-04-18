@@ -237,14 +237,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           child: Column(
             children: <Widget>[
               const SizedBox(
-                width: 360.0,
+                width: 380.0,
                 height: 10.0,
                 child: const DecoratedBox(
                   decoration: const BoxDecoration(color: Colors.white),
                 ),
               ),
               Text(
-                'Escolher Forma de Pagamento',
+                '  Escolher Forma de Pagamento    ',
                 style: TextStyle(
                     height: 1,
                     fontSize: 26.18,
@@ -252,7 +252,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     backgroundColor: Colors.white),
               ),
               const SizedBox(
-                width: 360.0,
+                width: 380.0,
                 height: 50.0,
                 child: const DecoratedBox(
                   decoration: const BoxDecoration(color: Colors.white),

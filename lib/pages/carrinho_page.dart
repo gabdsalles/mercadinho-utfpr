@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/repositories/carrinho_repository.dart';
 import '../models/produto.dart';
+import '../pages/pagamento.dart';
+import '../pages/merc_home.dart';
 
 class CarrinhoPage extends StatefulWidget {
   const CarrinhoPage({Key? key}) : super(key: key);
@@ -17,8 +19,23 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Image.asset('images/abelha.png'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Hero(
+              tag: 'foto_perfil',
+              child: GestureDetector(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(60),
+                  child: Image.asset('images/foto_perfil.png'),
+                ),
+              ),
+            ),
+          ),
+        ],
         title: const Text("Saldo R\$: 108,20"),
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.yellow,
       ),
       body: ListView.separated(
           itemBuilder: (BuildContext context, int produto) {
@@ -98,10 +115,20 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                     ),
                   ),
                   onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Pagamento(),
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text('Redirecionando para o pagamento')),
+                    );
                     // Ação do botão
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade700,
+                    backgroundColor: Colors.yellow.shade700,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40),
                     ),
@@ -113,6 +140,20 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MercHome()),
+          );
+        },
+        child: Icon(Icons.arrow_back),
+        backgroundColor: Colors.amber,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(width: 1, color: Colors.black),
+            borderRadius: BorderRadius.circular(100)),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 }

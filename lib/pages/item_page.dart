@@ -19,7 +19,7 @@ class ItemPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Saldo R\$: 108,20"),
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.yellow,
       ),
       body: ListView(
         children: [
