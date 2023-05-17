@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_mercadinho/pages/login.dart';
+import 'package:projeto_mercadinho/pages/cadastrar_page.dart';
+import 'package:projeto_mercadinho/pages/home_page.dart';
+import 'package:projeto_mercadinho/pages/recuperar_senha_page.dart';
 
-class Recuperar_Senha extends StatelessWidget {
+// ignore: camel_case_types
+class Login_Page extends StatelessWidget {
   final _form = GlobalKey<FormState>();
+  final _email = TextEditingController();
+  final _senha = TextEditingController();
 
-  recuperar() {
+  logar() {
     if (_form.currentState!.validate()) {
       return true;
     }
@@ -16,7 +21,7 @@ class Recuperar_Senha extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text('Recuperar Senha'),
+          child: Text('Mercadinho Universitário'),
         ),
         leading: Image.asset('images/abelha.png'),
         backgroundColor: Colors.yellow,
@@ -31,10 +36,8 @@ class Recuperar_Senha extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  child: Text(
-                    'Insira seu email e ra para receber a sua nova senha.',
-                    style: TextStyle(fontSize: 15),
-                  ),
+                  child: Image.asset('images/abelha.png'),
+                  width: 200,
                 ),
               ],
             ),
@@ -47,6 +50,7 @@ class Recuperar_Senha extends StatelessWidget {
                   height: 100,
                   width: 300,
                   child: TextFormField(
+                    controller: _email,
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,
@@ -74,6 +78,7 @@ class Recuperar_Senha extends StatelessWidget {
                   height: 100,
                   width: 300,
                   child: TextFormField(
+                    controller: _senha,
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,
@@ -86,12 +91,12 @@ class Recuperar_Senha extends StatelessWidget {
                         borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.circular(60),
                       ),
-                      labelText: 'Ra',
+                      labelText: 'Senha',
                     ),
                     keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Campo de Ra em branco !';
+                        return 'Campo de Senha em branco !';
                       }
                       return null;
                     },
@@ -116,16 +121,15 @@ class Recuperar_Senha extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                bool a = recuperar();
+                bool a = logar();
                 if (a) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Solicitação enviada')),
+                    SnackBar(content: Text('Login realizado com sucesso!')),
                   );
-
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Login()),
+                    MaterialPageRoute(builder: (context) => Home_Page()),
                   );
                 } else {
                   return null;
@@ -137,7 +141,7 @@ class Recuperar_Senha extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(16),
                     child: Text(
-                      'Confirmar',
+                      'Login',
                       style: TextStyle(fontSize: 20),
                     ),
                   )
@@ -145,23 +149,83 @@ class Recuperar_Senha extends StatelessWidget {
               ),
             ),
           ),
+          Row(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 16),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll<Color>(
+                      Colors.yellow,
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Cadastrar_Page()),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          'Cadastrar',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 60),
+                margin: EdgeInsets.only(top: 16),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll<Color>(
+                      Colors.yellow,
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Recuperar_Senha_Page()),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          'Recuperar Senha',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Login()),
-          );
-        },
-        child: Icon(Icons.arrow_back),
-        backgroundColor: Colors.amber,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: Colors.black),
-            borderRadius: BorderRadius.circular(100)),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      backgroundColor: Colors.yellow,
+      backgroundColor: Colors.yellow.shade200,
     );
   }
 }

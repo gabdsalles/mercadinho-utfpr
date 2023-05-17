@@ -1,26 +1,26 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
-import 'package:projeto_mercadinho/pages/editar_dados.dart';
-import 'package:projeto_mercadinho/pages/produtos_page.dart';
+import 'package:projeto_mercadinho/pages/login_page.dart';
+import 'package:projeto_mercadinho/pages/opcoes_pagamento_page.dart';
 
-import 'login.dart';
-import 'merc_home.dart';
+import 'home_page.dart';
 
-class Opcoes_Pagamento extends StatelessWidget {
+class Editar_Dados_Page extends StatelessWidget {
+  //final  dropValue = ValueNotifier('');
+  //final dropOpcoes = ['Alterar dados da conta', 'Adicionar saldo', 'Sair'];
+
   final _form = GlobalKey<FormState>();
-  final _form2 = GlobalKey<FormState>();
-  final _addSaldo = TextEditingController();
-  final _numeroCartao = TextEditingController();
-  final _nomeCartao = TextEditingController();
+  final _email = TextEditingController();
+  final _senha = TextEditingController();
+  final _confirmarSenha = TextEditingController();
+  final _nome = TextEditingController();
+  final _ra = TextEditingController();
+  final _curso = TextEditingController();
+  final _imagem = TextEditingController();
 
-  addSaldo() {
+  editar() {
     if (_form.currentState!.validate()) {
-      return true;
-    }
-    return false;
-  }
-
-  addCartao() {
-    if (_form2.currentState!.validate()) {
       return true;
     }
     return false;
@@ -31,9 +31,17 @@ class Opcoes_Pagamento extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text('Opções de Pagamento'),
+          child: Text('Editar Dados'),
         ),
-          leading: Image.asset('images/abelha.png'),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Home_Page()),
+            );
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -67,31 +75,8 @@ class Opcoes_Pagamento extends StatelessWidget {
                 Container(
                   height: 75,
                   width: 300,
-                  child: SizedBox(
-                      child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.circular(60.0), //<-- SEE HERE
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      child: Center(
-                        child: Text(
-                          'Adicionar Saldo (Fiado)',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  )),
-                ),
-                Container(
-                  height: 75,
-                  width: 300,
-                  child: TextFormField(
-                    controller: _addSaldo,
+                  child: new TextFormField(
+                    controller: _nome,
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,
@@ -104,124 +89,12 @@ class Opcoes_Pagamento extends StatelessWidget {
                         borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.circular(60),
                       ),
-                      labelText: 'Valor:',
+                      labelText: 'Nome',
                     ),
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.name,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Campo de Valor em branco !';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>(
-                  Colors.amber,
-                ),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                    side: BorderSide(color: Colors.black),
-                  ),
-                ),
-              ),
-              onPressed: () {
-                bool a = addSaldo();
-                if (a) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Saldo adicionado com sucesso!')),
-                  );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProdutosPage(
-                              texto: '',
-                            )),
-                  );
-                } else {
-                  return null;
-                }
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      'Confirmar',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Form(
-            key: _form2,
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(bottom: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                  ),
-                ),
-                Container(
-                  height: 75,
-                  width: 300,
-                  child: SizedBox(
-                      child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.circular(60.0), //<-- SEE HERE
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      child: Center(
-                        child: Text(
-                          'Adicionar Cartão',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  )),
-                ),
-                Container(
-                  height: 75,
-                  width: 300,
-                  child: TextFormField(
-                    controller: _numeroCartao,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(20.0),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
-                      ),
-                      labelText: 'Número:',
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Campo de Número do cartão em branco !';
+                        return 'Campo de Nome em branco !';
                       }
                       return null;
                     },
@@ -231,7 +104,7 @@ class Opcoes_Pagamento extends StatelessWidget {
                   height: 75,
                   width: 300,
                   child: TextFormField(
-                    controller: _nomeCartao,
+                    controller: _ra,
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,
@@ -244,21 +117,156 @@ class Opcoes_Pagamento extends StatelessWidget {
                         borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.circular(60),
                       ),
-                      labelText: 'Nome:',
+                      labelText: 'Ra',
                     ),
                     keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Campo de Nome do cartão em branco !';
+                        return 'Campo de Ra em branco !';
                       }
                       return null;
                     },
+                  ),
+                ),
+                Container(
+                  height: 75,
+                  width: 300,
+                  child: TextFormField(
+                    controller: _curso,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(20.0),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      labelText: 'Curso',
+                    ),
+                    keyboardType: TextInputType.text,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Campo de Curso em branco !';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Container(
+                  height: 75,
+                  width: 300,
+                  child: TextFormField(
+                    controller: _email,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(20.0),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      labelText: 'Email',
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Campo de Email em branco !';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Container(
+                  height: 75,
+                  width: 300,
+                  child: TextFormField(
+                    controller: _senha,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(20.0),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      labelText: 'Senha',
+                    ),
+                    keyboardType: TextInputType.visiblePassword,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Campo de Senha em branco !';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Container(
+                  height: 75,
+                  width: 300,
+                  child: TextFormField(
+                    controller: _confirmarSenha,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(20.0),
+                      filled: true, //<-- SEE HERE
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      labelText: 'Confirmar Senha',
+                    ),
+                    keyboardType: TextInputType.visiblePassword,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Campo de Confirmar Senha em branco !';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Container(
+                  height: 75,
+                  width: 300,
+                  child: TextFormField(
+                    controller: _imagem,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(20.0),
+                      filled: true, //<-- SEE HERE
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      labelText: 'Imagem',
+                    ),
+                    keyboardType: TextInputType.url,
                   ),
                 ),
               ],
             ),
           ),
           Container(
+            width: 250,
             alignment: Alignment.bottomCenter,
             child: ElevatedButton(
               style: ButtonStyle(
@@ -273,22 +281,32 @@ class Opcoes_Pagamento extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                bool a = addCartao();
-                if (a) {
+                bool a = editar();
+                if (_senha.value == _confirmarSenha.value) {
+                  if (a) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Dados alterados com sucesso!')),
+                    );
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Login_Page()),
+                    );
+                  } else {
+                    return null;
+                  }
+                } else {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Cartão adicionado com sucesso!')),
+                    SnackBar(content: Text('As senhas não são iguais')),
                   );
 
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ProdutosPage(
-                              texto: '',
-                            )),
+                        builder: (context) => Editar_Dados_Page()),
                   );
-                } else {
-                  return null;
                 }
               },
               child: Row(
@@ -297,7 +315,7 @@ class Opcoes_Pagamento extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(16),
                     child: Text(
-                      'Confirmar',
+                      'Salvar Alterações',
                       style: TextStyle(fontSize: 20),
                     ),
                   )
@@ -307,23 +325,8 @@ class Opcoes_Pagamento extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pop(
-            context,
-            //MaterialPageRoute(builder: (context) => ProdutosPage(texto: '')),
-          );
-        },
-        child: Icon(Icons.arrow_back),
-        backgroundColor: Colors.amber,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: Colors.black),
-            borderRadius: BorderRadius.circular(100)),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      backgroundColor: Colors.yellow,
-
-       bottomNavigationBar: BottomAppBar(
+      backgroundColor: Colors.yellow.shade200,
+      bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
@@ -338,8 +341,7 @@ class Opcoes_Pagamento extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          MercHome(),
+                      builder: (context) => Home_Page(),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -356,7 +358,7 @@ class Opcoes_Pagamento extends StatelessWidget {
                         );
                       },
                       child: Icon(
-                         Icons.home,
+                        Icons.home,
                         key: UniqueKey(),
                         color: Colors.black,
                         size: 28,
@@ -377,7 +379,8 @@ class Opcoes_Pagamento extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Editar_Dados()),
+                    MaterialPageRoute(
+                        builder: (context) => Opcoes_Pagamento_Page()),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },
@@ -393,14 +396,14 @@ class Opcoes_Pagamento extends StatelessWidget {
                         );
                       },
                       child: Icon(
-                        Icons.person,
+                        Icons.credit_card,
                         key: UniqueKey(),
                         color: Colors.black,
                         size: 28,
                       ),
                     ),
                     Text(
-                      "Perfil",
+                      "Pagamento",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -414,7 +417,7 @@ class Opcoes_Pagamento extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Login()),
+                    MaterialPageRoute(builder: (context) => Login_Page()),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },

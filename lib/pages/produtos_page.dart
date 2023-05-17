@@ -2,25 +2,26 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_mercadinho/pages/merc_home.dart';
+import 'package:projeto_mercadinho/pages/home_page.dart';
 import '../pages/item_page.dart';
-import '../repositories/bebidas.dart';
-import '../repositories/remedios.dart';
-import '../repositories/salgadinhos.dart';
+import '../repositories/bebidas_repository.dart';
+import '../repositories/remedios_repository.dart';
+import '../repositories/salgadinhos_repository.dart';
 import 'carrinho_page.dart';
-import 'editar_dados.dart';
-import 'login.dart';
+import 'editar_dados_page.dart';
+import 'login_page.dart';
 
-class ProdutosPage extends StatefulWidget {
+// ignore: camel_case_types
+class Produtos_Page extends StatefulWidget {
   final String texto;
 
-  const ProdutosPage({Key? key, required this.texto}) : super(key: key);
+  const Produtos_Page({Key? key, required this.texto}) : super(key: key);
 
   @override
-  State<ProdutosPage> createState() => _BebidasPageState();
+  State<Produtos_Page> createState() => _BebidasPageState();
 }
 
-class _BebidasPageState extends State<ProdutosPage> {
+class _BebidasPageState extends State<Produtos_Page> {
   List<dynamic> produtos = [];
 
   @override
@@ -42,7 +43,15 @@ class _BebidasPageState extends State<ProdutosPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Saldo R\$: 108,20"),
-        leading: Image.asset('images/abelha.png'),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Home_Page()),
+            );
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -167,20 +176,6 @@ class _BebidasPageState extends State<ProdutosPage> {
         ],
       ),
       backgroundColor: Colors.yellow,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pop(
-            context,
-            //MaterialPageRoute(builder: (context) => ProdutosPage(texto: '')),
-          );
-        },
-        child: Icon(Icons.arrow_back),
-        backgroundColor: Colors.amber,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: Colors.black),
-            borderRadius: BorderRadius.circular(100)),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
@@ -196,7 +191,7 @@ class _BebidasPageState extends State<ProdutosPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MercHome(),
+                      builder: (context) => Home_Page(),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -273,7 +268,8 @@ class _BebidasPageState extends State<ProdutosPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Editar_Dados()),
+                    MaterialPageRoute(
+                        builder: (context) => Editar_Dados_Page()),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },
@@ -310,7 +306,7 @@ class _BebidasPageState extends State<ProdutosPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Login()),
+                    MaterialPageRoute(builder: (context) => Login_Page()),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/repositories/carrinho_repository.dart';
 import '../models/produto.dart';
-import '../pages/pagamento.dart';
-import '../pages/merc_home.dart';
+import 'pagamento_page.dart';
+import 'home_page.dart';
 
 class CarrinhoPage extends StatefulWidget {
   const CarrinhoPage({Key? key}) : super(key: key);
@@ -19,7 +19,15 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset('images/abelha.png'),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Home_Page()),
+            );
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -118,7 +126,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Pagamento(),
+                        builder: (context) => Pagamento_Page(),
                       ),
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -140,20 +148,6 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MercHome()),
-          );
-        },
-        child: Icon(Icons.arrow_back),
-        backgroundColor: Colors.amber,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: Colors.black),
-            borderRadius: BorderRadius.circular(100)),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 }

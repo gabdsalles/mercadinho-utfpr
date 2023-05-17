@@ -2,12 +2,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_mercadinho/pages/editar_dados.dart';
-import 'package:projeto_mercadinho/pages/login.dart';
+import 'package:projeto_mercadinho/pages/editar_dados_page.dart';
+import 'package:projeto_mercadinho/pages/login_page.dart';
 import '../pages/carrinho_page.dart';
 import '../pages/produtos_page.dart';
 
-class MercHome extends StatelessWidget {
+// ignore: camel_case_types
+class Home_Page extends StatelessWidget {
   final List<String> produtos = [
     "Todos os Produtos",
     "Bebidas",
@@ -58,7 +59,8 @@ class MercHome extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ProdutosPage(texto: produtos[index])),
+                    builder: (context) =>
+                        Produtos_Page(texto: produtos[index])),
               );
             },
             style: ButtonStyle(
@@ -96,7 +98,7 @@ class MercHome extends StatelessWidget {
           );
         },
       ),
-      backgroundColor: Colors.yellow,
+      backgroundColor: Colors.yellow.shade200,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
@@ -112,7 +114,7 @@ class MercHome extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MercHome(),
+                      builder: (context) => Home_Page(),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -189,7 +191,8 @@ class MercHome extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Editar_Dados()),
+                    MaterialPageRoute(
+                        builder: (context) => Editar_Dados_Page()),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },
@@ -226,7 +229,7 @@ class MercHome extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Login()),
+                    MaterialPageRoute(builder: (context) => Login_Page()),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },

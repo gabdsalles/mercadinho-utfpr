@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_mercadinho/pages/login.dart';
-import 'package:projeto_mercadinho/pages/opcoes_pagamento.dart';
-import 'package:projeto_mercadinho/pages/produtos_page.dart';
+import 'package:projeto_mercadinho/pages/login_page.dart';
 
-import 'merc_home.dart';
-
-class Editar_Dados extends StatelessWidget {
+// ignore: camel_case_types
+class Cadastrar_Page extends StatelessWidget {
   //final  dropValue = ValueNotifier('');
   //final dropOpcoes = ['Alterar dados da conta', 'Adicionar saldo', 'Sair'];
 
@@ -18,7 +15,7 @@ class Editar_Dados extends StatelessWidget {
   final _curso = TextEditingController();
   final _imagem = TextEditingController();
 
-  editar() {
+  cadastrar() {
     if (_form.currentState!.validate()) {
       return true;
     }
@@ -30,23 +27,14 @@ class Editar_Dados extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text('Editar Dados'),
+          child: Text('Cadastrar'),
         ),
-        leading: Image.asset('images/abelha.png'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Hero(
-              tag: 'foto_perfil',
-              child: GestureDetector(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(60),
-                  child: Image.asset('images/foto_perfil.png'),
-                ),
-              ),
-            ),
-          ),
-        ],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         backgroundColor: Colors.yellow,
       ),
       body: ListView(
@@ -272,17 +260,18 @@ class Editar_Dados extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                bool a = editar();
+                bool a = cadastrar();
                 if (_senha.value == _confirmarSenha.value) {
                   if (a) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Dados alterados com sucesso!')),
+                      SnackBar(
+                          content: Text('Cadastro realizado com sucesso!')),
                     );
 
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Login()),
+                      MaterialPageRoute(builder: (context) => Login_Page()),
                     );
                   } else {
                     return null;
@@ -295,7 +284,7 @@ class Editar_Dados extends StatelessWidget {
 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Editar_Dados()),
+                    MaterialPageRoute(builder: (context) => Cadastrar_Page()),
                   );
                 }
               },
@@ -305,7 +294,7 @@ class Editar_Dados extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(16),
                     child: Text(
-                      'Salvar Alterações',
+                      'Cadastrar',
                       style: TextStyle(fontSize: 20),
                     ),
                   )
@@ -315,151 +304,7 @@ class Editar_Dados extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ProdutosPage(
-                      texto: '',
-                    )),
-          );
-        },
-        child: Icon(Icons.arrow_back),
-        backgroundColor: Colors.amber,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: Colors.black),
-            borderRadius: BorderRadius.circular(100)),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      backgroundColor: Colors.yellow,
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          height: 70,
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.yellow,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MercHome(),
-                    ),
-                  );
-                  // adicione aqui o código a ser executado ao clicar no ícone
-                },
-                child: Column(
-                  children: [
-                    AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
-                      transitionBuilder:
-                          (Widget child, Animation<double> animation) {
-                        return ScaleTransition(
-                          scale: animation,
-                          child: child,
-                        );
-                      },
-                      child: Icon(
-                        Icons.home,
-                        key: UniqueKey(),
-                        color: Colors.black,
-                        size: 28,
-                      ),
-                    ),
-                    Text(
-                      "Home",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Opcoes_Pagamento()),
-                  );
-                  // adicione aqui o código a ser executado ao clicar no ícone
-                },
-                child: Column(
-                  children: [
-                    AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
-                      transitionBuilder:
-                          (Widget child, Animation<double> animation) {
-                        return ScaleTransition(
-                          scale: animation,
-                          child: child,
-                        );
-                      },
-                      child: Icon(
-                        Icons.credit_card,
-                        key: UniqueKey(),
-                        color: Colors.black,
-                        size: 28,
-                      ),
-                    ),
-                    Text(
-                      "Pagamento",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login()),
-                  );
-                  // adicione aqui o código a ser executado ao clicar no ícone
-                },
-                child: Column(
-                  children: [
-                    AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
-                      transitionBuilder:
-                          (Widget child, Animation<double> animation) {
-                        return ScaleTransition(
-                          scale: animation,
-                          child: child,
-                        );
-                      },
-                      child: Icon(
-                        Icons.logout,
-                        key: UniqueKey(),
-                        color: Colors.black,
-                        size: 28,
-                      ),
-                    ),
-                    Text(
-                      "Logout",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      backgroundColor: Colors.yellow.shade200,
     );
   }
 }

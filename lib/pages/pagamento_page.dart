@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_mercadinho/pages/merc_home.dart';
+import 'package:projeto_mercadinho/pages/home_page.dart';
 import '../pages/carrinho_page.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:projeto_mercadinho/pages/editar_dados.dart';
-import 'package:projeto_mercadinho/pages/login.dart';
+import 'package:projeto_mercadinho/pages/editar_dados_page.dart';
+import 'package:projeto_mercadinho/pages/login_page.dart';
 
-class Pagamento extends StatelessWidget {
+// ignore: camel_case_types
+class Pagamento_Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +14,15 @@ class Pagamento extends StatelessWidget {
         title: Center(
           child: Text('Pagamento'),
         ),
-        leading: Image.asset('images/abelha.png'),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Home_Page()),
+            );
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -31,21 +40,7 @@ class Pagamento extends StatelessWidget {
         backgroundColor: Colors.yellow,
       ),
       body: const MyStatefulWidget(),
-      backgroundColor: Colors.yellow,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MercHome()),
-          );
-        },
-        child: Icon(Icons.arrow_back),
-        backgroundColor: Colors.amber,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: Colors.black),
-            borderRadius: BorderRadius.circular(100)),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      backgroundColor: Colors.yellow.shade200,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
@@ -61,7 +56,7 @@ class Pagamento extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MercHome(),
+                      builder: (context) => Home_Page(),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -138,7 +133,8 @@ class Pagamento extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Editar_Dados()),
+                    MaterialPageRoute(
+                        builder: (context) => Editar_Dados_Page()),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },
@@ -175,7 +171,7 @@ class Pagamento extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Login()),
+                    MaterialPageRoute(builder: (context) => Login_Page()),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },
@@ -228,6 +224,11 @@ enum Pagar { cartao, saldo, pix }
 /// private State class that goes with MyStatefulWidget
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   Pagar? _pagar = Pagar.cartao;
+
+  final yellowBoxDecoration = BoxDecoration(
+    color: Colors.yellow.shade200,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -236,11 +237,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         Center(
           child: Column(
             children: <Widget>[
-              const SizedBox(
+              SizedBox(
                 width: 380.0,
                 height: 10.0,
-                child: const DecoratedBox(
-                  decoration: const BoxDecoration(color: Colors.white),
+                child: DecoratedBox(
+                  decoration: yellowBoxDecoration,
                 ),
               ),
               Text(
@@ -249,17 +250,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     height: 1,
                     fontSize: 26.18,
                     fontWeight: FontWeight.bold,
-                    backgroundColor: Colors.white),
+                    backgroundColor: Colors.yellow.shade200),
               ),
-              const SizedBox(
+              SizedBox(
                 width: 380.0,
                 height: 50.0,
-                child: const DecoratedBox(
-                  decoration: const BoxDecoration(color: Colors.white),
+                child: DecoratedBox(
+                  decoration: yellowBoxDecoration,
                 ),
               ),
               ListTile(
-                tileColor: Colors.white,
+                tileColor: Colors.yellow.shade200,
                 title: const Text('Cartão'),
                 leading: Radio<Pagar>(
                   fillColor:
@@ -275,7 +276,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 trailing: Icon(Icons.credit_card),
               ),
               ListTile(
-                tileColor: Colors.white,
+                tileColor: Colors.yellow.shade200,
                 title: const Text('Pix'),
                 leading: Radio<Pagar>(
                   fillColor:
@@ -291,7 +292,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 trailing: Icon(Icons.pix_outlined),
               ),
               ListTile(
-                tileColor: Colors.white,
+                tileColor: Colors.yellow.shade200,
                 title: const Text('Saldo'),
                 leading: Radio<Pagar>(
                   fillColor:
@@ -309,11 +310,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ],
           ),
         ),
-        const SizedBox(
+        SizedBox(
           width: 360.0,
           height: 50.0,
-          child: const DecoratedBox(
-            decoration: const BoxDecoration(color: Colors.white),
+          child: DecoratedBox(
+            decoration: yellowBoxDecoration,
           ),
         ),
         ElevatedButton(
@@ -332,7 +333,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MercHome()),
+              MaterialPageRoute(builder: (context) => Home_Page()),
             );
           },
           child: Row(
