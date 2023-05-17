@@ -1,23 +1,35 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/repositories/carrinho_repository.dart';
+import 'package:projeto_mercadinho/repositories/produtos_repository.dart';
+import 'package:provider/provider.dart';
 import '../pages/carrinho_page.dart';
 import '../models/produto.dart';
 
 class ItemPage extends StatelessWidget {
   final Produto produto;
+  late CarrinhoRepository carrinho;
+  late ProdutosRepository listaProdutos;
 
-  const ItemPage({Key? key, required this.produto}) : super(key: key);
+  ItemPage({Key? key, required this.produto}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final dropValue = ValueNotifier('');
     final dropOpcoes = adicionarQuantidade(produto.quantidade);
     var quantidade = 1;
+    carrinho = context.watch<CarrinhoRepository>();
+    listaProdutos = context.watch<ProdutosRepository>();
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         title: const Text("Saldo R\$: 108,20"),
         backgroundColor: Colors.yellow,
       ),
@@ -188,12 +200,15 @@ class ItemPage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Produto carrinho = Produto(
+                Produto produtoCarrinho = Produto(
                     icone: produto.icone,
                     nome: produto.nome,
                     quantidade: quantidade,
-                    preco: produto.preco);
-                CarrinhoRepository.listaCarrinho.add(carrinho);
+                    preco: produto.preco,
+                    categoria: produto.categoria);
+                //CarrinhoRepository.listaCarrinho.add(carrinho);
+                carrinho.adicionarProduto(produtoCarrinho);
+                listaProdutos.atualizarQuantidadeProduto(produto, quantidade);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

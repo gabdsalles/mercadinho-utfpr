@@ -1,5 +1,8 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/repositories/carrinho_repository.dart';
+import 'package:provider/provider.dart';
 import '../models/produto.dart';
 import 'pagamento_page.dart';
 import 'home_page.dart';
@@ -12,11 +15,15 @@ class CarrinhoPage extends StatefulWidget {
 }
 
 class _CarrinhoPageState extends State<CarrinhoPage> {
-  final List<Produto> lista = CarrinhoRepository.listaCarrinho;
-  double valorTotal = CarrinhoRepository.getValorTotal();
+  //final List<Produto> lista = CarrinhoRepository.listaCarrinho;
+  late CarrinhoRepository carrinho;
+  late double valorTotal;
 
   @override
   Widget build(BuildContext context) {
+    carrinho = context.watch<CarrinhoRepository>();
+    valorTotal = carrinho.getValorTotal();
+    UnmodifiableListView<Produto> lista = carrinho.lista;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

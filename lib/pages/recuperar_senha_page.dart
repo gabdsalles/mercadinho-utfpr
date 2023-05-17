@@ -19,7 +19,12 @@ class Recuperar_Senha_Page extends StatelessWidget {
         title: Center(
           child: Text('Recuperar Senha'),
         ),
-        leading: Image.asset('images/abelha.png'),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         backgroundColor: Colors.yellow,
       ),
       body: ListView(

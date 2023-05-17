@@ -2,11 +2,11 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto_mercadinho/models/produto.dart';
 import 'package:projeto_mercadinho/pages/home_page.dart';
+import 'package:projeto_mercadinho/repositories/produtos_repository.dart';
+import 'package:provider/provider.dart';
 import '../pages/item_page.dart';
-import '../repositories/bebidas_repository.dart';
-import '../repositories/remedios_repository.dart';
-import '../repositories/salgadinhos_repository.dart';
 import 'carrinho_page.dart';
 import 'editar_dados_page.dart';
 import 'login_page.dart';
@@ -22,22 +22,27 @@ class Produtos_Page extends StatefulWidget {
 }
 
 class _BebidasPageState extends State<Produtos_Page> {
-  List<dynamic> produtos = [];
+  List<Produto> produtos = [];
+  late ProdutosRepository listaProdutos;
 
   @override
   Widget build(BuildContext context) {
+    listaProdutos = context.watch<ProdutosRepository>();
+
     if (widget.texto == "Bebidas") {
-      produtos = BebidaRepository().produtos;
+      produtos = listaProdutos.produtos
+          .where((produto) => produto.categoria == 'bebida')
+          .toList();
     } else if (widget.texto == "Salgadinhos \ne Bolachas") {
-      produtos = SalgadinhoRepository().produtos;
+      produtos = listaProdutos.produtos
+          .where((produto) => produto.categoria == 'salgadinho')
+          .toList();
     } else if (widget.texto == "Remédios") {
-      produtos = RemedioRepository().produtos;
+      produtos = listaProdutos.produtos
+          .where((produto) => produto.categoria == 'remédio')
+          .toList();
     } else {
-      produtos.addAll(
-        BebidaRepository().produtos +
-            SalgadinhoRepository().produtos +
-            RemedioRepository().produtos,
-      );
+      produtos.addAll(ProdutosRepository().produtos);
     }
 
     return Scaffold(
