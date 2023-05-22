@@ -1,33 +1,35 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:projeto_mercadinho/pages/login_page.dart';
 import 'package:projeto_mercadinho/pages/opcoes_pagamento_page.dart';
+import 'package:provider/provider.dart';
 
+import '../models/cadastrar.dart';
+import '../repositories/cadastro_repository.dart';
 import 'home_page.dart';
 
 class Editar_Dados_Page extends StatelessWidget {
   //final  dropValue = ValueNotifier('');
   //final dropOpcoes = ['Alterar dados da conta', 'Adicionar saldo', 'Sair'];
+  late CadastroRepository cadastro;
 
   final _form = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _senha = TextEditingController();
   final _confirmarSenha = TextEditingController();
   final _nome = TextEditingController();
-  final _ra = TextEditingController();
   final _curso = TextEditingController();
   final _imagem = TextEditingController();
 
-  editar() {
+  editarUser(Cadastrar cadastrar, BuildContext context) {
     if (_form.currentState!.validate()) {
-      return true;
+      cadastro.editarCadastro(cadastrar, context);
     }
-    return false;
   }
 
   @override
   Widget build(BuildContext context) {
+    cadastro = context.watch<CadastroRepository>();
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -56,7 +58,7 @@ class Editar_Dados_Page extends StatelessWidget {
             ),
           ),
         ],
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.yellow.shade400,
       ),
       body: ListView(
         padding: EdgeInsets.all(24),
@@ -95,34 +97,6 @@ class Editar_Dados_Page extends StatelessWidget {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Campo de Nome em branco !';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                Container(
-                  height: 75,
-                  width: 300,
-                  child: TextFormField(
-                    controller: _ra,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(20.0),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
-                      ),
-                      labelText: 'Ra',
-                    ),
-                    keyboardType: TextInputType.text,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Campo de Ra em branco !';
                       }
                       return null;
                     },
@@ -271,7 +245,7 @@ class Editar_Dados_Page extends StatelessWidget {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(
-                  Colors.amber,
+                  Colors.amber.shade300,
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -281,21 +255,29 @@ class Editar_Dados_Page extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                bool a = editar();
                 if (_senha.value == _confirmarSenha.value) {
-                  if (a) {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Dados alterados com sucesso!')),
-                    );
+                  Cadastrar cadastrar = Cadastrar(
+                      nome: _nome.text,
+                      ra: '1',
+                      curso: _curso.text,
+                      email: _email.text,
+                      senha: _senha.text,
+                      imagem: _imagem.text,
+                      log: 0,
+                      saldo: 0.0,
+                      numero: 0);
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login_Page()),
-                    );
-                  } else {
-                    return null;
-                  }
+                  // Mostra o coteudo do Carrinho_Page
+                  editarUser(cadastrar, context);
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Edição realizada com sucesso')),
+                  );
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home_Page()),
+                  );
                 } else {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -325,13 +307,13 @@ class Editar_Dados_Page extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: Colors.yellow.shade200,
+      backgroundColor: Colors.yellow.shade100,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.yellow,
+            color: Colors.yellow.shade400,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -415,11 +397,8 @@ class Editar_Dados_Page extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login_Page()),
-                  );
-                  // adicione aqui o código a ser executado ao clicar no ícone
+                  cadastro.logout(
+                      context); // adicione aqui o código a ser executado ao clicar no ícone
                 },
                 child: Column(
                   children: [

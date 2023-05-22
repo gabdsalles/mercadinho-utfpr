@@ -1,7 +1,7 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
+import 'package:projeto_mercadinho/repositories/cadastro_repository.dart';
 import 'package:projeto_mercadinho/repositories/carrinho_repository.dart';
+import 'package:projeto_mercadinho/repositories/produtos_repository.dart';
 import 'package:provider/provider.dart';
 import '../models/produto.dart';
 import 'pagamento_page.dart';
@@ -16,14 +16,18 @@ class CarrinhoPage extends StatefulWidget {
 
 class _CarrinhoPageState extends State<CarrinhoPage> {
   //final List<Produto> lista = CarrinhoRepository.listaCarrinho;
+  late ProdutosRepository listaProdutos;
   late CarrinhoRepository carrinho;
+  late CadastroRepository cadastro;
   late double valorTotal;
 
   @override
   Widget build(BuildContext context) {
     carrinho = context.watch<CarrinhoRepository>();
+    cadastro = context.watch<CadastroRepository>();
+    listaProdutos = context.watch<ProdutosRepository>();
     valorTotal = carrinho.getValorTotal();
-    UnmodifiableListView<Produto> lista = carrinho.lista;
+    List<Produto> lista = carrinho.listaCarrinho;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -35,6 +39,8 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
           },
           icon: Icon(Icons.arrow_back),
         ),
+        title: Text("Carrinho"),
+        titleTextStyle: TextStyle(fontSize: 25, color: Colors.black),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -49,12 +55,24 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
             ),
           ),
         ],
-        title: const Text("Saldo R\$: 108,20"),
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.yellow.shade400,
       ),
       body: ListView.separated(
-          itemBuilder: (BuildContext context, int produto) {
-            return ListTile(
+        itemBuilder: (BuildContext context, int produto) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 241, 238, 238),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: ListTile(
               leading: Image.asset(lista[produto].icone),
               title: Text(
                 lista[produto].nome,
@@ -72,24 +90,49 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                   color: Colors.black,
                 ),
               ),
-              trailing: Text(
-                '${lista[produto].quantidade.toString()} Uni',
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${lista[produto].quantidade.toString()} Uni',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // Atualiza o BD
+                      int quantidade = lista[produto].quantidade;
+                      carrinho.removerCarrinho(lista[produto], quantidade);
+                      // Mostra o coteudo do Carrinho_Page
+                      carrinho.removerProduto(lista[produto]);
+                      // Atualiza a lista de produtos
+                      listaProdutos.atualizarRemocaoCarrinho(
+                          lista[produto], quantidade);
+                      lista.removeAt(produto);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Produto removido do carrinho',
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.delete),
+                    color: Colors.red,
+                  ),
+                ],
               ),
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              tileColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            );
-          },
-          padding: EdgeInsets.all(8.0),
-          separatorBuilder: (_, ___) => Divider(),
-          itemCount: lista.length),
+            ),
+          );
+        },
+        padding: EdgeInsets.all(8.0),
+        separatorBuilder: (_, ___) => Divider(),
+        itemCount: lista.length,
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -119,7 +162,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                 ],
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 40, vertical: 1),
+                margin: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 child: ElevatedButton.icon(
                   icon: Icon(Icons.payment),
                   label: Text(
@@ -143,7 +186,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                     // Ação do botão
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.yellow.shade700,
+                    backgroundColor: Colors.amber.shade300,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40),
                     ),

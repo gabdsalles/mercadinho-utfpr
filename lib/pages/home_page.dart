@@ -1,33 +1,39 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors, avoid_print, use_key_in_widget_constructors, camel_case_types
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/pages/editar_dados_page.dart';
-import 'package:projeto_mercadinho/pages/login_page.dart';
+import 'package:provider/provider.dart';
 import '../pages/carrinho_page.dart';
 import '../pages/produtos_page.dart';
+import '../repositories/cadastro_repository.dart';
 
-// ignore: camel_case_types
+late CadastroRepository cadastro;
+
 class Home_Page extends StatelessWidget {
   final List<String> produtos = [
     "Todos os Produtos",
     "Bebidas",
-    "Salgadinhos \ne Bolachas",
+    "Bolachas",
+    //"Higiene",
     "Remédios",
+    "Salgadinhos",
   ];
 
   final List<String> imagens = [
     "images/seta.png",
     "images/refrigerantes.png",
-    "images/salgadinhos.png",
+    "images/bolachas.png",
     "images/remedios.png",
+    //"images/higiene.png",
+    "images/salgadinhos.png",
   ];
 
   @override
   Widget build(BuildContext context) {
+    cadastro = context.watch<CadastroRepository>();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Saldo R\$: 108,20"),
         leading: Image.asset('images/abelha.png'),
         actions: [
           Padding(
@@ -43,7 +49,7 @@ class Home_Page extends StatelessWidget {
             ),
           ),
         ],
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.yellow.shade400,
       ),
       body: GridView.builder(
         padding: EdgeInsets.all(30),
@@ -65,7 +71,7 @@ class Home_Page extends StatelessWidget {
             },
             style: ButtonStyle(
               backgroundColor: MaterialStatePropertyAll<Color>(
-                Colors.amber,
+                Colors.amber.shade300,
               ),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
@@ -104,7 +110,7 @@ class Home_Page extends StatelessWidget {
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.yellow,
+            color: Colors.yellow.shade400,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -227,10 +233,7 @@ class Home_Page extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login_Page()),
-                  );
+                  cadastro.logout(context);
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },
                 child: Column(

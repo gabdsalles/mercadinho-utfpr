@@ -3,7 +3,6 @@ import 'package:projeto_mercadinho/pages/home_page.dart';
 import '../pages/carrinho_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:projeto_mercadinho/pages/editar_dados_page.dart';
-import 'package:projeto_mercadinho/pages/login_page.dart';
 
 // ignore: camel_case_types
 class Pagamento_Page extends StatelessWidget {
@@ -169,10 +168,7 @@ class Pagamento_Page extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login_Page()),
-                  );
+                  cadastro.logout(context);
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },
                 child: Column(

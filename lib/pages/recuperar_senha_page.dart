@@ -1,29 +1,30 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
-import 'package:projeto_mercadinho/pages/login_page.dart';
+import 'package:provider/provider.dart';
+
+import '../repositories/cadastro_repository.dart';
 
 // ignore: camel_case_types
 class Recuperar_Senha_Page extends StatelessWidget {
   final _form = GlobalKey<FormState>();
+  final _email = TextEditingController();
+  final _ra = TextEditingController();
 
-  recuperar() {
+  late CadastroRepository cadastro;
+  recuperar(String email, String ra, BuildContext context) {
     if (_form.currentState!.validate()) {
-      return true;
+      cadastro.recuperarSenha(email, ra, context);
     }
-    return false;
   }
 
   @override
   Widget build(BuildContext context) {
+    cadastro = context.watch<CadastroRepository>();
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text('Recuperar Senha'),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back),
         ),
         backgroundColor: Colors.yellow,
       ),
@@ -53,6 +54,7 @@ class Recuperar_Senha_Page extends StatelessWidget {
                   height: 100,
                   width: 300,
                   child: TextFormField(
+                    controller: _email,
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,
@@ -80,6 +82,7 @@ class Recuperar_Senha_Page extends StatelessWidget {
                   height: 100,
                   width: 300,
                   child: TextFormField(
+                    controller: _ra,
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,
@@ -94,7 +97,7 @@ class Recuperar_Senha_Page extends StatelessWidget {
                       ),
                       labelText: 'Ra',
                     ),
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Campo de Ra em branco !';
@@ -112,7 +115,7 @@ class Recuperar_Senha_Page extends StatelessWidget {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(
-                  Colors.amber,
+                  Colors.amber.shade300,
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -122,20 +125,7 @@ class Recuperar_Senha_Page extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                bool a = recuperar();
-                if (a) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Solicitação enviada')),
-                  );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login_Page()),
-                  );
-                } else {
-                  return null;
-                }
+                recuperar(_email.text, _ra.text, context);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -153,21 +143,7 @@ class Recuperar_Senha_Page extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Login_Page()),
-          );
-        },
-        child: Icon(Icons.arrow_back),
-        backgroundColor: Colors.amber,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: Colors.black),
-            borderRadius: BorderRadius.circular(100)),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      backgroundColor: Colors.yellow.shade200,
+      backgroundColor: Colors.yellow.shade100,
     );
   }
 }

@@ -1,30 +1,36 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/pages/cadastrar_page.dart';
-import 'package:projeto_mercadinho/pages/home_page.dart';
 import 'package:projeto_mercadinho/pages/recuperar_senha_page.dart';
+import 'package:provider/provider.dart';
+
+import '../repositories/cadastro_repository.dart';
 
 // ignore: camel_case_types
 class Login_Page extends StatelessWidget {
   final _form = GlobalKey<FormState>();
-  final _email = TextEditingController();
+  final _ra = TextEditingController();
   final _senha = TextEditingController();
 
-  logar() {
+  late CadastroRepository cadastro;
+
+  logar(String ra, String senha, BuildContext context) async {
     if (_form.currentState!.validate()) {
-      return true;
+      cadastro.login(ra, senha, context);
     }
-    return false;
   }
 
   @override
   Widget build(BuildContext context) {
+    cadastro = context.watch<CadastroRepository>();
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text('Mercadinho Universitário'),
         ),
         leading: Image.asset('images/abelha.png'),
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.yellow.shade400,
       ),
       body: ListView(
         padding: EdgeInsets.all(24),
@@ -50,7 +56,7 @@ class Login_Page extends StatelessWidget {
                   height: 100,
                   width: 300,
                   child: TextFormField(
-                    controller: _email,
+                    controller: _ra,
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,
@@ -63,12 +69,12 @@ class Login_Page extends StatelessWidget {
                         borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.circular(60),
                       ),
-                      labelText: 'Email',
+                      labelText: 'ra',
                     ),
-                    keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Campo de Email em branco !';
+                        return 'Campo de RA em branco !';
                       }
                       return null;
                     },
@@ -111,7 +117,7 @@ class Login_Page extends StatelessWidget {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(
-                  Colors.amber,
+                  Colors.amber.shade300,
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -121,19 +127,7 @@ class Login_Page extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                bool a = logar();
-                if (a) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Login realizado com sucesso!')),
-                  );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home_Page()),
-                  );
-                } else {
-                  return null;
-                }
+                logar(_ra.text, _senha.text, context);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -156,7 +150,7 @@ class Login_Page extends StatelessWidget {
                 child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll<Color>(
-                      Colors.yellow,
+                      Colors.yellow.shade400,
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -186,12 +180,12 @@ class Login_Page extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(left: 60),
+                padding: EdgeInsets.only(left: 59),
                 margin: EdgeInsets.only(top: 16),
                 child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll<Color>(
-                      Colors.yellow,
+                      Colors.yellow.shade400,
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -225,7 +219,7 @@ class Login_Page extends StatelessWidget {
           )
         ],
       ),
-      backgroundColor: Colors.yellow.shade200,
+      backgroundColor: Colors.yellow.shade100,
     );
   }
 }

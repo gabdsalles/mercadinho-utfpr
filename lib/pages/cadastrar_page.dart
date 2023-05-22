@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_mercadinho/pages/login_page.dart';
+import 'package:projeto_mercadinho/repositories/cadastro_repository.dart';
+import 'package:provider/provider.dart';
+import '../models/cadastrar.dart';
+//import 'package:projeto_mercadinho/models/cadastrar.dart';
+//import 'package:provider/provider.dart';
 
-// ignore: camel_case_types
+// ignore: camel_case_types, must_be_immutable
 class Cadastrar_Page extends StatelessWidget {
   //final  dropValue = ValueNotifier('');
   //final dropOpcoes = ['Alterar dados da conta', 'Adicionar saldo', 'Sair'];
+  late CadastroRepository cadastro;
 
   final _form = GlobalKey<FormState>();
   final _email = TextEditingController();
@@ -15,27 +20,22 @@ class Cadastrar_Page extends StatelessWidget {
   final _curso = TextEditingController();
   final _imagem = TextEditingController();
 
-  cadastrar() {
+  cadastrarUser(Cadastrar cadastrar, BuildContext context) {
     if (_form.currentState!.validate()) {
-      return true;
+      cadastro.adicionarCadastro(cadastrar, context);
     }
-    return false;
   }
 
   @override
   Widget build(BuildContext context) {
+    cadastro = context.watch<CadastroRepository>();
+
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text('Cadastrar'),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back),
-        ),
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.yellow.shade400,
       ),
       body: ListView(
         padding: EdgeInsets.all(24),
@@ -98,7 +98,7 @@ class Cadastrar_Page extends StatelessWidget {
                       ),
                       labelText: 'Ra',
                     ),
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Campo de Ra em branco !';
@@ -250,7 +250,7 @@ class Cadastrar_Page extends StatelessWidget {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(
-                  Colors.amber,
+                  Colors.amber.shade300,
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -260,31 +260,24 @@ class Cadastrar_Page extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                bool a = cadastrar();
                 if (_senha.value == _confirmarSenha.value) {
-                  if (a) {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text('Cadastro realizado com sucesso!')),
-                    );
+                  Cadastrar cadastrar = Cadastrar(
+                      nome: _nome.text,
+                      ra: _ra.text,
+                      curso: _curso.text,
+                      email: _email.text,
+                      senha: _senha.text,
+                      imagem: _imagem.text,
+                      log: 0,
+                      saldo: 0.0,
+                      numero: 0);
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login_Page()),
-                    );
-                  } else {
-                    return null;
-                  }
+                  // Mostra o coteudo do Carrinho_Page
+                  cadastrarUser(cadastrar, context);
                 } else {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('As senhas não são iguais')),
-                  );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Cadastrar_Page()),
                   );
                 }
               },
@@ -304,7 +297,9 @@ class Cadastrar_Page extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: Colors.yellow.shade200,
+      backgroundColor: Colors.yellow.shade100,
     );
   }
 }
+
+class AuthService {}

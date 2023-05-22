@@ -1,87 +1,201 @@
 import 'package:flutter/material.dart';
-
+import 'package:projeto_mercadinho/database/db.dart';
+import 'package:sqflite/sqlite_api.dart';
 import '../models/produto.dart';
 
 class ProdutosRepository extends ChangeNotifier {
+  late Database db;
+  List<Produto> get prods => produtos;
+  int get length => produtos.length;
+
   List<Produto> produtos = [
+    Produto(
+        nome: "Água mineral",
+        icone: "images/bebidas/agua.png",
+        preco: 2.50,
+        quantidade: 47,
+        categoria: "Bebidas"),
     Produto(
         nome: "Coca cola 350ml",
         icone: "images/bebidas/coca.png",
         preco: 5.50,
-        quantidade: 5,
-        categoria: "bebida"),
+        quantidade: 50,
+        categoria: "Bebidas"),
     Produto(
         nome: "Guaraná 350ml",
         icone: "images/bebidas/guarana.png",
         preco: 4.00,
-        quantidade: 7,
-        categoria: "bebida"),
+        quantidade: 70,
+        categoria: "Bebidas"),
     Produto(
         nome: "Fanta laranja 350ml",
         icone: "images/bebidas/fanta.png",
         preco: 5.00,
-        quantidade: 3,
-        categoria: "bebida"),
+        quantidade: 30,
+        categoria: "Bebidas"),
+    Produto(
+        nome: "Sprite 350ml",
+        icone: "images/bebidas/sprite.png",
+        preco: 4.80,
+        quantidade: 50,
+        categoria: "Bebidas"),
+    Produto(
+        nome: "Monster Mango Loco",
+        icone: "images/bebidas/monster.png",
+        preco: 8.50,
+        quantidade: 15,
+        categoria: "Bebidas"),
     Produto(
         nome: "Dipirona",
         icone: "images/remedios/dipirona.png",
         preco: 10.25,
-        quantidade: 3,
-        categoria: "remédio"),
+        quantidade: 30,
+        categoria: "Remédios"),
     Produto(
         nome: "Engov ",
         icone: "images/remedios/engov.png",
         preco: 5.00,
-        quantidade: 7,
-        categoria: "remédio"),
+        quantidade: 70,
+        categoria: "Remédios"),
     Produto(
         nome: "Neosaldina",
         icone: "images/remedios/neosaldina.png",
         preco: 21.85,
-        quantidade: 15,
-        categoria: "remédio"),
+        quantidade: 150,
+        categoria: "Remédios"),
     Produto(
         nome: "Tylenol",
         icone: "images/remedios/tylenol.png",
         preco: 36.40,
-        quantidade: 20,
-        categoria: "remédio"),
+        quantidade: 200,
+        categoria: "Remédios"),
+    Produto(
+        nome: "Baconzitos",
+        icone: "images/salgadinhos/baconzitos.png",
+        preco: 4.00,
+        quantidade: 100,
+        categoria: "Salgadinhos"),
+    Produto(
+        nome: "Torcida cebola",
+        icone: "images/salgadinhos/torcida.png",
+        preco: 2.00,
+        quantidade: 80,
+        categoria: "Salgadinhos"),
+    Produto(
+        nome: "Pipoteca cebola",
+        icone: "images/salgadinhos/pipoteca.png",
+        preco: 5.80,
+        quantidade: 200,
+        categoria: "Salgadinhos"),
     Produto(
         nome: "Fandangos presunto",
         icone: "images/salgadinhos/fandangos.png",
         preco: 4.00,
-        quantidade: 10,
-        categoria: "salgadinho"),
+        quantidade: 100,
+        categoria: "Salgadinhos"),
+    Produto(
+        nome: "Pringles",
+        icone: "images/salgadinhos/pringles.png",
+        preco: 12.50,
+        quantidade: 34,
+        categoria: "Salgadinhos"),
+    Produto(
+        nome: "Calipso",
+        icone: "images/bolachas/calipso.png",
+        preco: 8.35,
+        quantidade: 15,
+        categoria: "Bolachas"),
+    Produto(
+        nome: "Oreo",
+        icone: "images/bolachas/oreo.png",
+        preco: 4.35,
+        quantidade: 15,
+        categoria: "Bolachas"),
     Produto(
         nome: "Passatempo ",
-        icone: "images/salgadinhos/passatempo.png",
+        icone: "images/bolachas/passatempo.png",
         preco: 2.10,
-        quantidade: 4,
-        categoria: "salgadinho"),
+        quantidade: 40,
+        categoria: "Bolachas"),
     Produto(
-        nome: "Pípoteca cebola",
-        icone: "images/salgadinhos/pipoteca.png",
-        preco: 5.80,
-        quantidade: 2,
-        categoria: "salgadinho"),
+        nome: "Toddy ",
+        icone: "images/bolachas/toddy.png",
+        preco: 2.10,
+        quantidade: 40,
+        categoria: "Bolachas"),
     Produto(
         nome: "Traquinas Chocolate",
-        icone: "images/salgadinhos/traquinas.png",
+        icone: "images/bolachas/traquinas.png",
         preco: 2.00,
-        quantidade: 7,
-        categoria: "salgadinho"),
+        quantidade: 70,
+        categoria: "Bolachas"),
   ];
+
+  Future<void> inserirProdutos() async {
+    db = await DB.instance.database;
+
+    for (Produto produto in produtos) {
+      List<Map<String, dynamic>> result = await db.query(
+        'produto',
+        where: 'nome = ?',
+        whereArgs: [produto.nome],
+        limit: 1,
+      );
+
+      if (result.isEmpty) {
+        await db.insert('produto', produto.toMap());
+      }
+    }
+  }
+
+  Future<void> atualizarProdutosNoBanco() async {
+    db = await DB.instance.database;
+
+    for (Produto produto in produtos) {
+      await attProduto(produto);
+    }
+  }
+
+  Future<void> attProduto(Produto produto) async {
+    await db.update(
+      'produto',
+      produto.toMap(),
+      where: 'nome = ?',
+      whereArgs: [produto.nome],
+    );
+  }
+
+  Future<void> atualizarProduto(Produto produto, String novaCategoria) async {
+    db = await DB.instance.database;
+
+    produto.categoria = novaCategoria;
+
+    await db.update(
+      'produto',
+      produto.toMap(),
+      where: 'nome = ?',
+      whereArgs: [produto.nome],
+    );
+  }
 
   atualizarQuantidadeProduto(Produto produto, int quantidade) {
     produtos.forEach((produtoLista) {
-      if (produto.nome == produtoLista.nome) {
+      if (produto.nome == produtoLista.nome)
         produtoLista.quantidade -= quantidade;
-        print('Quantidade atualizada: ' + produtoLista.quantidade.toString());
-      }
     });
 
     notifyListeners();
   }
 
-  get length => null;
+  Future<void> removerProdutoPorNome(String nome) async {
+    Database db = await DB.instance.database;
+    await db.delete('produto', where: 'nome = ?', whereArgs: [nome]);
+  }
+
+  atualizarRemocaoCarrinho(Produto produto, int quantidade) {
+    produtos.forEach((produtoLista) {
+      if (produto.nome == produtoLista.nome)
+        produtoLista.quantidade += quantidade;
+    });
+  }
 }

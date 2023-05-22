@@ -1,8 +1,10 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/pages/editar_dados_page.dart';
-import 'package:projeto_mercadinho/pages/produtos_page.dart';
+import 'package:provider/provider.dart';
 
-import 'login_page.dart';
+import '../repositories/cadastro_repository.dart';
 import 'home_page.dart';
 
 // ignore: camel_case_types
@@ -11,24 +13,25 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
   final _form2 = GlobalKey<FormState>();
   final _addSaldo = TextEditingController();
   final _numeroCartao = TextEditingController();
-  final _nomeCartao = TextEditingController();
+  //final _nomeCartao = TextEditingController();
 
-  addSaldo() {
+  late CadastroRepository cadastro;
+
+  addSaldo(double add, BuildContext context) {
     if (_form.currentState!.validate()) {
-      return true;
+      cadastro.addSaldo(add, context);
     }
-    return false;
   }
 
-  addCartao() {
-    if (_form2.currentState!.validate()) {
-      return true;
+  addCartao(int num, BuildContext context) {
+    if (_form.currentState!.validate()) {
+      cadastro.addCartao(num, context);
     }
-    return false;
   }
 
   @override
   Widget build(BuildContext context) {
+    cadastro = context.watch<CadastroRepository>();
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -57,7 +60,7 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
             ),
           ),
         ],
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.yellow.shade400,
       ),
       body: ListView(
         padding: EdgeInsets.all(24),
@@ -132,7 +135,7 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(
-                  Colors.amber,
+                  Colors.amber.shade300,
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -142,23 +145,7 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                bool a = addSaldo();
-                if (a) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Saldo adicionado com sucesso!')),
-                  );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Produtos_Page(
-                              texto: '',
-                            )),
-                  );
-                } else {
-                  return null;
-                }
+                addSaldo(double.parse(_addSaldo.text), context);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -236,34 +223,6 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
                     },
                   ),
                 ),
-                Container(
-                  height: 75,
-                  width: 300,
-                  child: TextFormField(
-                    controller: _nomeCartao,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(20.0),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
-                      ),
-                      labelText: 'Nome:',
-                    ),
-                    keyboardType: TextInputType.text,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Campo de Nome do cartão em branco !';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
               ],
             ),
           ),
@@ -272,7 +231,7 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(
-                  Colors.amber,
+                  Colors.amber.shade300,
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -282,23 +241,7 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                bool a = addCartao();
-                if (a) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Cartão adicionado com sucesso!')),
-                  );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Produtos_Page(
-                              texto: '',
-                            )),
-                  );
-                } else {
-                  return null;
-                }
+                addCartao(int.parse(_numeroCartao.text), context);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -316,13 +259,13 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: Colors.yellow.shade200,
+      backgroundColor: Colors.yellow.shade100,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.yellow,
+            color: Colors.yellow.shade400,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -406,10 +349,7 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login_Page()),
-                  );
+                  cadastro.logout(context);
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },
                 child: Column(

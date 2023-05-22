@@ -1,53 +1,66 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
+// ignore_for_file: camel_case_types
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/models/produto.dart';
 import 'package:projeto_mercadinho/pages/home_page.dart';
 import 'package:projeto_mercadinho/repositories/produtos_repository.dart';
-import 'package:provider/provider.dart';
 import '../pages/item_page.dart';
 import 'carrinho_page.dart';
 import 'editar_dados_page.dart';
-import 'login_page.dart';
+import '../database/db.dart';
+import 'package:sqflite/sqflite.dart';
 
-// ignore: camel_case_types
 class Produtos_Page extends StatefulWidget {
   final String texto;
-
   const Produtos_Page({Key? key, required this.texto}) : super(key: key);
 
   @override
-  State<Produtos_Page> createState() => _BebidasPageState();
+  State<Produtos_Page> createState() => _ProdutosPageState();
 }
 
-class _BebidasPageState extends State<Produtos_Page> {
+class _ProdutosPageState extends State<Produtos_Page> {
   List<Produto> produtos = [];
-  late ProdutosRepository listaProdutos;
+
+  void atualizarProdutos() async {
+    ProdutosRepository produtosRepository = ProdutosRepository();
+    await produtosRepository.atualizarProdutosNoBanco();
+
+    loadProdutos();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Carregue os produtos do banco de dados ao iniciar a página
+    loadProdutos();
+  }
+
+  void loadProdutos() async {
+    Database db = await DB.instance.database;
+    ProdutosRepository produtosRepository = ProdutosRepository();
+    produtosRepository.removerProdutoPorNome("Água dasddmineral");
+    await produtosRepository.inserirProdutos();
+
+    List<Map<String, dynamic>> result = await db.query('produto');
+    List<Produto> produtosList = [];
+    for (Map<String, dynamic> row in result) {
+      Produto produto = Produto.fromMap(row);
+      //print(produto.nome + "  " + produto.categoria);
+      if (produto.categoria == widget.texto && produto.quantidade > 0)
+        produtosList.add(produto);
+      else if (widget.texto == "Todos os Produtos") produtosList.add(produto);
+    }
+
+    setState(() {
+      produtos = produtosList;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    listaProdutos = context.watch<ProdutosRepository>();
-
-    if (widget.texto == "Bebidas") {
-      produtos = listaProdutos.produtos
-          .where((produto) => produto.categoria == 'bebida')
-          .toList();
-    } else if (widget.texto == "Salgadinhos \ne Bolachas") {
-      produtos = listaProdutos.produtos
-          .where((produto) => produto.categoria == 'salgadinho')
-          .toList();
-    } else if (widget.texto == "Remédios") {
-      produtos = listaProdutos.produtos
-          .where((produto) => produto.categoria == 'remédio')
-          .toList();
-    } else {
-      produtos.addAll(ProdutosRepository().produtos);
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Saldo R\$: 108,20"),
         leading: IconButton(
           onPressed: () {
             Navigator.push(
@@ -58,6 +71,7 @@ class _BebidasPageState extends State<Produtos_Page> {
           icon: Icon(Icons.arrow_back),
         ),
         actions: [
+          // Botão para atualizar a quantidade dos produtos
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Hero(
@@ -71,7 +85,7 @@ class _BebidasPageState extends State<Produtos_Page> {
             ),
           ),
         ],
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.yellow.shade400,
       ),
       body: Column(
         children: [
@@ -82,7 +96,7 @@ class _BebidasPageState extends State<Produtos_Page> {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 margin: const EdgeInsets.only(top: 15, left: 15),
                 decoration: BoxDecoration(
-                  color: Colors.amber,
+                  color: Colors.amber.shade300,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.2,
@@ -92,7 +106,9 @@ class _BebidasPageState extends State<Produtos_Page> {
                 child: Text(
                   widget.texto,
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Expanded(
@@ -113,7 +129,7 @@ class _BebidasPageState extends State<Produtos_Page> {
               ),
               itemCount: produtos.length,
               itemBuilder: (context, index) {
-                // Botões que são os icones dos produtos
+                // Botões que são os ícones dos produtos
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -128,7 +144,7 @@ class _BebidasPageState extends State<Produtos_Page> {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 230, 225, 232),
+                      color: const Color.fromARGB(255, 250, 252, 232),
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(color: Colors.black),
                     ),
@@ -160,10 +176,10 @@ class _BebidasPageState extends State<Produtos_Page> {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                "R\$ " + produtos[index].preco.toString(),
+                                "R\$ ${produtos[index].preco.toString()}",
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
-                                  color: Colors.amber,
+                                  color: Colors.black,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -180,13 +196,13 @@ class _BebidasPageState extends State<Produtos_Page> {
           ),
         ],
       ),
-      backgroundColor: Colors.yellow,
+      backgroundColor: Colors.yellow.shade100,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.yellow,
+            color: Colors.yellow.shade400,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -204,7 +220,7 @@ class _BebidasPageState extends State<Produtos_Page> {
                 child: Column(
                   children: [
                     AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       transitionBuilder:
                           (Widget child, Animation<double> animation) {
                         return ScaleTransition(
@@ -219,7 +235,7 @@ class _BebidasPageState extends State<Produtos_Page> {
                         size: 28,
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Home",
                       style: TextStyle(
                         color: Colors.black,
@@ -243,7 +259,7 @@ class _BebidasPageState extends State<Produtos_Page> {
                 child: Column(
                   children: [
                     AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       transitionBuilder:
                           (Widget child, Animation<double> animation) {
                         return ScaleTransition(
@@ -258,7 +274,7 @@ class _BebidasPageState extends State<Produtos_Page> {
                         size: 28,
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Carrinho",
                       style: TextStyle(
                         color: Colors.black,
@@ -281,7 +297,7 @@ class _BebidasPageState extends State<Produtos_Page> {
                 child: Column(
                   children: [
                     AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       transitionBuilder:
                           (Widget child, Animation<double> animation) {
                         return ScaleTransition(
@@ -296,7 +312,7 @@ class _BebidasPageState extends State<Produtos_Page> {
                         size: 28,
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Perfil",
                       style: TextStyle(
                         color: Colors.black,
@@ -309,16 +325,13 @@ class _BebidasPageState extends State<Produtos_Page> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login_Page()),
-                  );
+                  cadastro.logout(context);
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },
                 child: Column(
                   children: [
                     AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       transitionBuilder:
                           (Widget child, Animation<double> animation) {
                         return ScaleTransition(
@@ -333,7 +346,7 @@ class _BebidasPageState extends State<Produtos_Page> {
                         size: 28,
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Logout",
                       style: TextStyle(
                         color: Colors.black,

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:projeto_mercadinho/repositories/cadastro_repository.dart';
 import 'package:projeto_mercadinho/repositories/carrinho_repository.dart';
 import 'package:projeto_mercadinho/repositories/produtos_repository.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ class ItemPage extends StatelessWidget {
   final Produto produto;
   late CarrinhoRepository carrinho;
   late ProdutosRepository listaProdutos;
+  late CadastroRepository cadastro;
 
   ItemPage({Key? key, required this.produto}) : super(key: key);
 
@@ -21,22 +23,16 @@ class ItemPage extends StatelessWidget {
     var quantidade = 1;
     carrinho = context.watch<CarrinhoRepository>();
     listaProdutos = context.watch<ProdutosRepository>();
+    cadastro = context.watch<CadastroRepository>();
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back),
-        ),
-        title: const Text("Saldo R\$: 108,20"),
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.yellow.shade400,
       ),
       body: ListView(
         children: [
           Container(
-            color: Colors.orange.shade100,
+            color: Colors.yellow.shade100,
             width: double.infinity,
             height: 330,
             padding: const EdgeInsets.symmetric(vertical: 5),
@@ -63,6 +59,7 @@ class ItemPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
+
           // Primeiro Container
           Container(
             padding: const EdgeInsets.all(15),
@@ -206,9 +203,13 @@ class ItemPage extends StatelessWidget {
                     quantidade: quantidade,
                     preco: produto.preco,
                     categoria: produto.categoria);
-                //CarrinhoRepository.listaCarrinho.add(carrinho);
+
+                // Mostra o coteudo do Carrinho_Page
                 carrinho.adicionarProduto(produtoCarrinho);
+                // Atualiza a lista de produtos
                 listaProdutos.atualizarQuantidadeProduto(produto, quantidade);
+                // Atualiza o BD
+                carrinho.adicionarCarrinho(produto, quantidade);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -219,7 +220,7 @@ class ItemPage extends StatelessWidget {
                 // Ação do botão
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
+                backgroundColor: Colors.amber.shade300,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(40),
                 ),
