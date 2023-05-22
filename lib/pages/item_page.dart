@@ -204,12 +204,12 @@ class ItemPage extends StatelessWidget {
                     preco: produto.preco,
                     categoria: produto.categoria);
 
+                // Atualiza o BD
+                carrinho.adicionarCarrinho(produto, quantidade);
                 // Mostra o coteudo do Carrinho_Page
                 carrinho.adicionarProduto(produtoCarrinho);
                 // Atualiza a lista de produtos
                 listaProdutos.atualizarQuantidadeProduto(produto, quantidade);
-                // Atualiza o BD
-                carrinho.adicionarCarrinho(produto, quantidade);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

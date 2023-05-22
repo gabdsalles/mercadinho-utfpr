@@ -5,12 +5,11 @@ import 'package:sqflite/sqlite_api.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CarrinhoRepository extends ChangeNotifier {
-    late Database db;
+  late Database db;
 
   List<Produto> _listaCarrinho = [];
 
-
-void adicionarCarrinho(Produto produto, int quantidade) async {
+  void adicionarCarrinho(Produto produto, int quantidade) async {
     db = await DB.instance.database;
 
     await db.transaction((txn) async {
@@ -21,6 +20,7 @@ void adicionarCarrinho(Produto produto, int quantidade) async {
           int estoqueAtual = produtoEstoque['quantidade'];
           if (estoqueAtual >= quantidade) {
             int novoEstoque = estoqueAtual - quantidade;
+            print('entrou no if');
 
             await txn.update(
               'produto',
@@ -28,14 +28,7 @@ void adicionarCarrinho(Produto produto, int quantidade) async {
               where: 'nome = ?',
               whereArgs: [produto.nome],
             );
-
-            // Realize outras ações relacionadas ao carrinho aqui, se necessário
-          } else {
-            // Caso a quantidade em estoque seja insuficiente, faça o tratamento adequado
-            // (exemplo: exiba uma mensagem de erro, lance uma exceção, etc.)
           }
-
-          break; // Encerra o loop, pois o produto foi encontrado
         }
       }
     });

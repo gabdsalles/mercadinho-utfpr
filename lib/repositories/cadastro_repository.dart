@@ -6,6 +6,7 @@ import 'package:projeto_mercadinho/pages/recuperar_senha_page.dart';
 import 'package:sqflite/sqlite_api.dart';
 import '../models/cadastrar.dart';
 import 'package:sqflite/sqflite.dart';
+import '../models/produto.dart';
 import '../pages/cadastrar_page.dart';
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
