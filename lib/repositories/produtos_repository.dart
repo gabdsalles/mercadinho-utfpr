@@ -166,20 +166,16 @@ class ProdutosRepository extends ChangeNotifier {
   Future<void> inserirProdutos() async {
     db = await DB.instance.database;
 
-    //db.delete('produto');
-
-    //db.execute(_produto2);
-
     for (Produto produto in produtos) {
       List<Map<String, dynamic>> result = await db.query(
-        'produto2',
+        'produto',
         where: 'nome = ?',
         whereArgs: [produto.nome],
         limit: 1,
       );
 
       if (result.isEmpty) {
-        await db.insert('produto2', produto.toMap());
+        await db.insert('produto', produto.toMap());
       }
     }
   }
@@ -194,7 +190,7 @@ class ProdutosRepository extends ChangeNotifier {
 
   Future<void> attProduto(Produto produto) async {
     await db.update(
-      'produto2',
+      'produto',
       produto.toMap(),
       where: 'nome = ?',
       whereArgs: [produto.nome],
@@ -207,7 +203,7 @@ class ProdutosRepository extends ChangeNotifier {
     produto.categoria = novaCategoria;
 
     await db.update(
-      'produto2',
+      'produto',
       produto.toMap(),
       where: 'nome = ?',
       whereArgs: [produto.nome],
@@ -225,7 +221,7 @@ class ProdutosRepository extends ChangeNotifier {
 
   Future<void> removerProdutoPorNome(String nome) async {
     Database db = await DB.instance.database;
-    await db.delete('produto2', where: 'nome = ?', whereArgs: [nome]);
+    await db.delete('produto', where: 'nome = ?', whereArgs: [nome]);
   }
 
   atualizarRemocaoCarrinho(Produto produto, int quantidade) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_mercadinho/pages/home_page.dart';
 import 'package:projeto_mercadinho/pages/login_page.dart';
 
 class MeuAplicativo extends StatelessWidget {

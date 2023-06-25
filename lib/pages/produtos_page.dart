@@ -5,11 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/models/produto.dart';
 import 'package:projeto_mercadinho/pages/home_page.dart';
 import 'package:projeto_mercadinho/repositories/produtos_repository.dart';
+import 'package:provider/provider.dart';
 import '../pages/item_page.dart';
+import '../repositories/cadastro_repository.dart';
 import 'carrinho_page.dart';
 import 'editar_dados_page.dart';
 import '../database/db.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
+
+late CadastroRepository cadastro;
 
 class Produtos_Page extends StatefulWidget {
   final String texto;
@@ -23,6 +29,8 @@ class Produtos_Page extends StatefulWidget {
 
 class _ProdutosPageState extends State<Produtos_Page> {
   List<Produto> produtos = [];
+  Uint8List? _imagemBytes;
+  String? _imagemString = "";
 
   void atualizarProdutos() async {
     ProdutosRepository produtosRepository = ProdutosRepository();
@@ -34,8 +42,21 @@ class _ProdutosPageState extends State<Produtos_Page> {
   @override
   void initState() {
     super.initState();
-    // Carregue os produtos do banco de dados ao iniciar a página
+    imagemString();
     loadProdutos();
+    cadastro = context.read<CadastroRepository>();
+  }
+
+  Future<void> imagemString() async {
+    CadastroRepository cadastroRepository = CadastroRepository();
+    _imagemString = await cadastroRepository.acharImagem();
+    if (_imagemString != null) {
+      setState(() {
+        _imagemBytes = base64Decode(_imagemString!);
+      });
+    } else {
+      print("Imagem não encontrada");
+    }
   }
 
   void loadProdutos() async {
@@ -43,7 +64,7 @@ class _ProdutosPageState extends State<Produtos_Page> {
     ProdutosRepository produtosRepository = ProdutosRepository();
     await produtosRepository.inserirProdutos();
 
-    List<Map<String, dynamic>> result = await db.query('produto2');
+    List<Map<String, dynamic>> result = await db.query('produto');
     List<Produto> produtosList = [];
     for (Map<String, dynamic> row in result) {
       Produto produto = Produto.fromMap(row);
@@ -83,7 +104,15 @@ class _ProdutosPageState extends State<Produtos_Page> {
               child: GestureDetector(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(60),
-                  child: Image.asset('images/foto_perfil.png'),
+                  child: _imagemBytes != null
+                      ? Image.memory(
+                          _imagemBytes!,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          'images/foto_perfil.png',
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),

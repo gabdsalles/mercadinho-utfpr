@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import '../models/produto.dart';
 import 'pagamento_page.dart';
 import 'home_page.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
 class CarrinhoPage extends StatefulWidget {
   final String mercado;
@@ -22,11 +24,31 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
   late CarrinhoRepository carrinho;
   late CadastroRepository cadastro;
   late double valorTotal;
+  Uint8List? _imagemBytes;
+  String? _imagemString = "";
+
+  @override
+  void initState() {
+    super.initState();
+    imagemString();
+    cadastro = context.read<CadastroRepository>();
+  }
+
+  Future<void> imagemString() async {
+    CadastroRepository cadastroRepository = CadastroRepository();
+    _imagemString = await cadastroRepository.acharImagem();
+    if (_imagemString != null) {
+      setState(() {
+        _imagemBytes = base64Decode(_imagemString!);
+      });
+    } else {
+      print("Imagem não encontrada");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     carrinho = context.watch<CarrinhoRepository>();
-    cadastro = context.watch<CadastroRepository>();
     listaProdutos = context.watch<ProdutosRepository>();
     valorTotal = carrinho.getValorTotal();
     List<Produto> lista = carrinho.listaCarrinho;
@@ -52,7 +74,15 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
               child: GestureDetector(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(60),
-                  child: Image.asset('images/foto_perfil.png'),
+                  child: _imagemBytes != null
+                      ? Image.memory(
+                          _imagemBytes!,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          'images/foto_perfil.png',
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),

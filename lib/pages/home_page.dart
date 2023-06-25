@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import '../pages/carrinho_page.dart';
 import '../pages/produtos_page.dart';
 import '../repositories/cadastro_repository.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
 late CadastroRepository cadastro;
 
@@ -21,6 +23,8 @@ class Home_Page extends StatefulWidget {
 
 class _HomePageState extends State<Home_Page> {
   late String dropdownValue;
+  Uint8List? _imagemBytes;
+  String? _imagemString = "";
 
   final List<String> produtos = [
     "Todos os Produtos",
@@ -42,6 +46,25 @@ class _HomePageState extends State<Home_Page> {
 
   List<String> markets = ['UTFPR', 'UEPG', 'Campus'];
   int cont = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    imagemString();
+    cadastro = context.read<CadastroRepository>();
+  }
+
+  Future<void> imagemString() async {
+    CadastroRepository cadastroRepository = CadastroRepository();
+    _imagemString = await cadastroRepository.acharImagem();
+    if (_imagemString != null) {
+      setState(() {
+        _imagemBytes = base64Decode(_imagemString!);
+      });
+    } else {
+      print("Imagem não encontrada");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +101,15 @@ class _HomePageState extends State<Home_Page> {
               child: GestureDetector(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(60),
-                  child: Image.asset('images/foto_perfil.png'),
+                  child: _imagemBytes != null
+                      ? Image.memory(
+                          _imagemBytes!,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          'images/foto_perfil.png',
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),
