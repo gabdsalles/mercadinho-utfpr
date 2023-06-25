@@ -4,14 +4,15 @@ class Produto {
   int quantidade;
   double preco;
   String categoria;
+  String mercado;
 
-  Produto({
-    required this.icone,
-    required this.nome,
-    required this.quantidade,
-    required this.preco,
-    required this.categoria,
-  });
+  Produto(
+      {required this.nome,
+      required this.icone,
+      required this.quantidade,
+      required this.preco,
+      required this.categoria,
+      required this.mercado});
 
   String getNome() {
     return nome;
@@ -24,16 +25,17 @@ class Produto {
       'quantidade': quantidade,
       'preco': preco,
       'categoria': categoria,
+      'mercado': mercado
     };
   }
 
   factory Produto.fromMap(Map<String, dynamic> map) {
     return Produto(
-      nome: map['nome'],
-      icone: map['icone'],
-      quantidade: map['quantidade'],
-      preco: double.parse(map['preco']),
-      categoria: map['categoria'],
-    );
+        nome: map['nome'],
+        icone: map['icone'],
+        quantidade: map['quantidade'],
+        preco: double.parse(map['preco']),
+        categoria: map['categoria'],
+        mercado: map['mercado']);
   }
 }

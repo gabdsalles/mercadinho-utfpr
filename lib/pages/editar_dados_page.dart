@@ -12,6 +12,9 @@ class Editar_Dados_Page extends StatelessWidget {
   //final  dropValue = ValueNotifier('');
   //final dropOpcoes = ['Alterar dados da conta', 'Adicionar saldo', 'Sair'];
   late CadastroRepository cadastro;
+  final String mercado;
+
+  Editar_Dados_Page({required this.mercado});
 
   final _form = GlobalKey<FormState>();
   final _email = TextEditingController();
@@ -39,7 +42,8 @@ class Editar_Dados_Page extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Home_Page()),
+              MaterialPageRoute(
+                  builder: (context) => Home_Page(mercado: mercado)),
             );
           },
           icon: Icon(Icons.arrow_back),
@@ -58,7 +62,9 @@ class Editar_Dados_Page extends StatelessWidget {
             ),
           ),
         ],
-        backgroundColor: Colors.yellow.shade400,
+        backgroundColor: mercado == "UTFPR"
+            ? Colors.yellow.shade400
+            : Colors.lightBlue.shade400,
       ),
       body: ListView(
         padding: EdgeInsets.all(24),
@@ -245,7 +251,9 @@ class Editar_Dados_Page extends StatelessWidget {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(
-                  Colors.amber.shade300,
+                  mercado == "UTFPR"
+                      ? Colors.amber.shade300
+                      : Colors.blue.shade300,
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -276,7 +284,10 @@ class Editar_Dados_Page extends StatelessWidget {
 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Home_Page()),
+                    MaterialPageRoute(
+                        builder: (context) => Home_Page(
+                              mercado: mercado,
+                            )),
                   );
                 } else {
                   Navigator.pop(context);
@@ -287,7 +298,9 @@ class Editar_Dados_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Editar_Dados_Page()),
+                        builder: (context) => Editar_Dados_Page(
+                              mercado: mercado,
+                            )),
                   );
                 }
               },
@@ -307,13 +320,17 @@ class Editar_Dados_Page extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: Colors.yellow.shade100,
+      backgroundColor: mercado == "UTFPR"
+          ? Colors.yellow.shade100
+          : Colors.lightBlue.shade100,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.yellow.shade400,
+            color: mercado == "UTFPR"
+                ? Colors.yellow.shade400
+                : Colors.lightBlue.shade400,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -323,7 +340,9 @@ class Editar_Dados_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Home_Page(),
+                      builder: (context) => Home_Page(
+                        mercado: mercado,
+                      ),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -362,7 +381,9 @@ class Editar_Dados_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Opcoes_Pagamento_Page()),
+                        builder: (context) => Opcoes_Pagamento_Page(
+                              mercado: mercado,
+                            )),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },

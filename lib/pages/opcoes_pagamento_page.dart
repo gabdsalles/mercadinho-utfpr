@@ -15,6 +15,10 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
   final _numeroCartao = TextEditingController();
   //final _nomeCartao = TextEditingController();
 
+  final String mercado;
+
+  Opcoes_Pagamento_Page({required this.mercado});
+
   late CadastroRepository cadastro;
 
   addSaldo(double add, BuildContext context) {
@@ -41,7 +45,10 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Home_Page()),
+              MaterialPageRoute(
+                  builder: (context) => Home_Page(
+                        mercado: mercado,
+                      )),
             );
           },
           icon: Icon(Icons.arrow_back),
@@ -60,7 +67,9 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
             ),
           ),
         ],
-        backgroundColor: Colors.yellow.shade400,
+        backgroundColor: mercado == "UTFPR"
+            ? Colors.yellow.shade400
+            : Colors.lightBlue.shade400,
       ),
       body: ListView(
         padding: EdgeInsets.all(24),
@@ -135,7 +144,9 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(
-                  Colors.amber.shade300,
+                  mercado == 'UTFPR'
+                      ? Colors.amber.shade300
+                      : Colors.blue.shade300,
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -231,7 +242,9 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(
-                  Colors.amber.shade300,
+                  mercado == 'UTFPR'
+                      ? Colors.amber.shade300
+                      : Colors.blue.shade300,
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -259,13 +272,17 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: Colors.yellow.shade100,
+      backgroundColor: mercado == 'UTFPR'
+          ? Colors.yellow.shade100
+          : Colors.lightBlue.shade100,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.yellow.shade400,
+            color: mercado == 'UTFPR'
+                ? Colors.yellow.shade400
+                : Colors.lightBlue.shade400,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -275,7 +292,9 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Home_Page(),
+                      builder: (context) => Home_Page(
+                        mercado: mercado,
+                      ),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -314,7 +333,9 @@ class Opcoes_Pagamento_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Editar_Dados_Page()),
+                        builder: (context) => Editar_Dados_Page(
+                              mercado: mercado,
+                            )),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },

@@ -13,7 +13,9 @@ import 'package:sqflite/sqflite.dart';
 
 class Produtos_Page extends StatefulWidget {
   final String texto;
-  const Produtos_Page({Key? key, required this.texto}) : super(key: key);
+  final String mercado;
+  const Produtos_Page({Key? key, required this.texto, required this.mercado})
+      : super(key: key);
 
   @override
   State<Produtos_Page> createState() => _ProdutosPageState();
@@ -39,17 +41,19 @@ class _ProdutosPageState extends State<Produtos_Page> {
   void loadProdutos() async {
     Database db = await DB.instance.database;
     ProdutosRepository produtosRepository = ProdutosRepository();
-    produtosRepository.removerProdutoPorNome("Água dasddmineral");
     await produtosRepository.inserirProdutos();
 
-    List<Map<String, dynamic>> result = await db.query('produto');
+    List<Map<String, dynamic>> result = await db.query('produto2');
     List<Produto> produtosList = [];
     for (Map<String, dynamic> row in result) {
       Produto produto = Produto.fromMap(row);
       //print(produto.nome + "  " + produto.categoria);
-      if (produto.categoria == widget.texto && produto.quantidade > 0)
+      if (produto.categoria == widget.texto &&
+          produto.quantidade > 0 &&
+          produto.mercado == widget.mercado)
         produtosList.add(produto);
-      else if (widget.texto == "Todos os Produtos") produtosList.add(produto);
+      else if (widget.texto == "Todos os Produtos" &&
+          produto.mercado == widget.mercado) produtosList.add(produto);
     }
 
     setState(() {
@@ -65,13 +69,13 @@ class _ProdutosPageState extends State<Produtos_Page> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Home_Page()),
+              MaterialPageRoute(
+                  builder: (context) => Home_Page(mercado: widget.mercado)),
             );
           },
           icon: Icon(Icons.arrow_back),
         ),
         actions: [
-          // Botão para atualizar a quantidade dos produtos
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Hero(
@@ -85,7 +89,9 @@ class _ProdutosPageState extends State<Produtos_Page> {
             ),
           ),
         ],
-        backgroundColor: Colors.yellow.shade400,
+        backgroundColor: widget.mercado == "UTFPR"
+            ? Colors.yellow.shade400
+            : Colors.lightBlue.shade400,
       ),
       body: Column(
         children: [
@@ -96,7 +102,9 @@ class _ProdutosPageState extends State<Produtos_Page> {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 margin: const EdgeInsets.only(top: 15, left: 15),
                 decoration: BoxDecoration(
-                  color: Colors.amber.shade300,
+                  color: widget.mercado == "UTFPR"
+                      ? Colors.amber.shade300
+                      : Colors.blue.shade300,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.2,
@@ -137,6 +145,7 @@ class _ProdutosPageState extends State<Produtos_Page> {
                       MaterialPageRoute(
                         builder: (context) => ItemPage(
                           produto: produtos[index],
+                          mercado: widget.mercado,
                         ),
                       ),
                     );
@@ -144,7 +153,9 @@ class _ProdutosPageState extends State<Produtos_Page> {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 250, 252, 232),
+                      color: widget.mercado == "UTFPR"
+                          ? const Color.fromARGB(255, 250, 252, 232)
+                          : Color.fromARGB(255, 193, 240, 255),
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(color: Colors.black),
                     ),
@@ -196,13 +207,17 @@ class _ProdutosPageState extends State<Produtos_Page> {
           ),
         ],
       ),
-      backgroundColor: Colors.yellow.shade100,
+      backgroundColor: widget.mercado == "UTFPR"
+          ? Colors.yellow.shade100
+          : Colors.lightBlue.shade100,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.yellow.shade400,
+            color: widget.mercado == "UTFPR"
+                ? Colors.yellow.shade400
+                : Colors.lightBlue.shade400,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -212,7 +227,7 @@ class _ProdutosPageState extends State<Produtos_Page> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Home_Page(),
+                      builder: (context) => Home_Page(mercado: widget.mercado),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -251,7 +266,8 @@ class _ProdutosPageState extends State<Produtos_Page> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CarrinhoPage(),
+                      builder: (context) =>
+                          CarrinhoPage(mercado: widget.mercado),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -290,7 +306,9 @@ class _ProdutosPageState extends State<Produtos_Page> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Editar_Dados_Page()),
+                        builder: (context) => Editar_Dados_Page(
+                              mercado: widget.mercado,
+                            )),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_mercadinho/pages/home_page.dart';
 import 'package:projeto_mercadinho/pages/login_page.dart';
 
 class MeuAplicativo extends StatelessWidget {
@@ -12,6 +13,7 @@ class MeuAplicativo extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
+      //home: Home_Page(),
       home: Login_Page(),
     );
   }

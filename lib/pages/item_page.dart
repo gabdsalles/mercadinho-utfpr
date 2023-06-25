@@ -10,11 +10,13 @@ import '../models/produto.dart';
 
 class ItemPage extends StatelessWidget {
   final Produto produto;
+  final String mercado;
   late CarrinhoRepository carrinho;
   late ProdutosRepository listaProdutos;
   late CadastroRepository cadastro;
 
-  ItemPage({Key? key, required this.produto}) : super(key: key);
+  ItemPage({Key? key, required this.produto, required this.mercado})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +29,16 @@ class ItemPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.yellow.shade400,
+        backgroundColor: mercado == "UTFPR"
+            ? Colors.yellow.shade400
+            : Colors.lightBlue.shade400,
       ),
       body: ListView(
         children: [
           Container(
-            color: Colors.yellow.shade100,
+            color: mercado == "UTFPR"
+                ? Colors.yellow.shade100
+                : Colors.lightBlue.shade100,
             width: double.infinity,
             height: 330,
             padding: const EdgeInsets.symmetric(vertical: 5),
@@ -202,7 +208,8 @@ class ItemPage extends StatelessWidget {
                     nome: produto.nome,
                     quantidade: quantidade,
                     preco: produto.preco,
-                    categoria: produto.categoria);
+                    categoria: produto.categoria,
+                    mercado: produto.mercado);
 
                 // Atualiza o BD
                 carrinho.adicionarCarrinho(produto, quantidade);
@@ -213,14 +220,16 @@ class ItemPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CarrinhoPage(),
+                    builder: (context) => CarrinhoPage(mercado: mercado),
                   ),
                 );
 
                 // Ação do botão
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber.shade300,
+                backgroundColor: mercado == "UTFPR"
+                    ? Colors.amber.shade300
+                    : Colors.blue.shade300,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(40),
                 ),

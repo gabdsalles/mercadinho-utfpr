@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:projeto_mercadinho/database/db.dart';
 import 'package:projeto_mercadinho/pages/editar_dados_page.dart';
 import 'package:projeto_mercadinho/pages/opcoes_pagamento_page.dart';
 import 'package:projeto_mercadinho/pages/recuperar_senha_page.dart';
+import 'package:projeto_mercadinho/services/location_controller.dart';
 import 'package:sqflite/sqlite_api.dart';
 import '../models/cadastrar.dart';
 import 'package:sqflite/sqflite.dart';
-import '../models/produto.dart';
 import '../pages/cadastrar_page.dart';
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
@@ -15,6 +16,7 @@ import '../pages/login_page.dart';
 
 class CadastroRepository extends ChangeNotifier {
   late Database db;
+  late String mercado;
 
   void adicionarCadastro(Cadastrar cadastro, BuildContext context) async {
     db = await DB.instance.database;
@@ -51,7 +53,8 @@ class CadastroRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  void login(String ra, String senha, BuildContext context) async {
+  void login(String ra, String senha, BuildContext context,
+      LocationController location) async {
     db = await DB.instance.database;
     await db.transaction((txn) async {
       List<Map<String, dynamic>> result = await txn.query(
@@ -89,13 +92,16 @@ class CadastroRepository extends ChangeNotifier {
  text: 'Logado com sucesso!',
  
 );*/
+        Future<Position> posicaoAtual = location.getPosicaoAtual();
+        mercado = await location.getMinimumDistanceMarket(posicaoAtual);
+        print("Mercado: " + mercado.toString());
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login realizado com sucesso!')),
         );
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Home_Page()),
+          MaterialPageRoute(builder: (context) => Home_Page(mercado: mercado)),
         );
       }
     });
@@ -220,7 +226,8 @@ class CadastroRepository extends ChangeNotifier {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Editar_Dados_Page()),
+          MaterialPageRoute(
+              builder: (context) => Editar_Dados_Page(mercado: mercado)),
         );
       }
 
@@ -260,7 +267,10 @@ class CadastroRepository extends ChangeNotifier {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Opcoes_Pagamento_Page()),
+          MaterialPageRoute(
+              builder: (context) => Opcoes_Pagamento_Page(
+                    mercado: mercado,
+                  )),
         );
       }
 
@@ -277,7 +287,10 @@ class CadastroRepository extends ChangeNotifier {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Opcoes_Pagamento_Page()),
+        MaterialPageRoute(
+            builder: (context) => Opcoes_Pagamento_Page(
+                  mercado: mercado,
+                )),
       );
     });
     notifyListeners();
@@ -303,7 +316,8 @@ class CadastroRepository extends ChangeNotifier {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Opcoes_Pagamento_Page()),
+          MaterialPageRoute(
+              builder: (context) => Opcoes_Pagamento_Page(mercado: mercado)),
         );
       }
 
@@ -320,7 +334,8 @@ class CadastroRepository extends ChangeNotifier {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Opcoes_Pagamento_Page()),
+        MaterialPageRoute(
+            builder: (context) => Opcoes_Pagamento_Page(mercado: mercado)),
       );
     });
     notifyListeners();

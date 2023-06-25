@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/pages/cadastrar_page.dart';
 import 'package:projeto_mercadinho/pages/recuperar_senha_page.dart';
+import 'package:projeto_mercadinho/services/location_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../repositories/cadastro_repository.dart';
@@ -14,16 +15,18 @@ class Login_Page extends StatelessWidget {
   final _senha = TextEditingController();
 
   late CadastroRepository cadastro;
+  late LocationController location;
 
   logar(String ra, String senha, BuildContext context) async {
     if (_form.currentState!.validate()) {
-      cadastro.login(ra, senha, context);
+      cadastro.login(ra, senha, context, location);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     cadastro = context.watch<CadastroRepository>();
+    location = context.watch<LocationController>();
     return Scaffold(
       appBar: AppBar(
         title: Center(

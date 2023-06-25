@@ -23,7 +23,7 @@ class DB {
 
   _onCreate(db, versao) async {
     await db.execute(_cadastro);
-    await db.execute(_produto);
+    await db.execute(_produto2);
     await db.execute(_carrinho);
 
     await _cadastrarProdutos(db);
@@ -50,7 +50,19 @@ class DB {
     icone TEXT,
     quantidade INTEGER,
     preco TEXT,
-    categoria TEXT
+    categoria TEXT,
+  );
+''';
+
+  String get _produto2 => '''
+  CREATE TABLE produto2(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT,
+    icone TEXT,
+    quantidade INTEGER,
+    preco TEXT,
+    categoria TEXT,
+    mercado TEXT
   );
 ''';
 
@@ -69,7 +81,7 @@ class DB {
     List<Produto> lista = ProdutosRepository().produtos;
 
     for (Produto produto in lista) {
-      await db.insert('produto', produto.toMap());
+      await db.insert('produto2', produto.toMap());
     }
   }
 }

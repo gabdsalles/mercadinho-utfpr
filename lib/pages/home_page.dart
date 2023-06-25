@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, use_key_in_widget_constructors, camel_case_types
+// ignore_for_file: prefer_const_constructors, avoid_print, use_key_in_widget_constructors, camel_case_types, must_be_immutable
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,18 @@ import '../repositories/cadastro_repository.dart';
 
 late CadastroRepository cadastro;
 
-class Home_Page extends StatelessWidget {
+class Home_Page extends StatefulWidget {
+  String mercado;
+
+  Home_Page({required this.mercado});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<Home_Page> {
+  late String dropdownValue;
+
   final List<String> produtos = [
     "Todos os Produtos",
     "Bebidas",
@@ -29,13 +40,37 @@ class Home_Page extends StatelessWidget {
     "images/salgadinhos.png",
   ];
 
+  List<String> markets = ['UTFPR', 'UEPG', 'Campus'];
+  int cont = 0;
+
   @override
   Widget build(BuildContext context) {
     cadastro = context.watch<CadastroRepository>();
+
+    if (cont == 0) {
+      dropdownValue = widget.mercado;
+      //print(cont);
+      cont++;
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: Image.asset('images/abelha.png'),
         actions: [
+          DropdownButton<String>(
+            value: dropdownValue,
+            onChanged: (String? value) {
+              setState(() {
+                dropdownValue = value!;
+              });
+            },
+            items: markets.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Hero(
@@ -49,7 +84,9 @@ class Home_Page extends StatelessWidget {
             ),
           ),
         ],
-        backgroundColor: Colors.yellow.shade400,
+        backgroundColor: dropdownValue == "UTFPR"
+            ? Colors.yellow.shade400
+            : Colors.lightBlue.shade400,
       ),
       body: GridView.builder(
         padding: EdgeInsets.all(30),
@@ -65,13 +102,15 @@ class Home_Page extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        Produtos_Page(texto: produtos[index])),
+                    builder: (context) => Produtos_Page(
+                        texto: produtos[index], mercado: dropdownValue)),
               );
             },
             style: ButtonStyle(
               backgroundColor: MaterialStatePropertyAll<Color>(
-                Colors.amber.shade300,
+                dropdownValue == "UTFPR"
+                    ? Colors.amber.shade400
+                    : Colors.blue.shade400,
               ),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
@@ -104,13 +143,17 @@ class Home_Page extends StatelessWidget {
           );
         },
       ),
-      backgroundColor: Colors.yellow.shade200,
+      backgroundColor: dropdownValue == "UTFPR"
+          ? Colors.yellow.shade200
+          : Colors.blue.shade200,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.yellow.shade400,
+            color: dropdownValue == "UTFPR"
+                ? Colors.yellow.shade400
+                : Colors.blue.shade400,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -120,7 +163,7 @@ class Home_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Home_Page(),
+                      builder: (context) => Home_Page(mercado: dropdownValue),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -159,7 +202,8 @@ class Home_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CarrinhoPage(),
+                      builder: (context) =>
+                          CarrinhoPage(mercado: dropdownValue),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -198,7 +242,9 @@ class Home_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Editar_Dados_Page()),
+                        builder: (context) => Editar_Dados_Page(
+                              mercado: dropdownValue,
+                            )),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },

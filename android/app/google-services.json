@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "461677073752",
-    "project_id": "projeto-teste-24ece",
-    "storage_bucket": "projeto-teste-24ece.appspot.com"
+    "project_number": "395683732236",
+    "firebase_url": "https://mercadinho-utfpr-default-rtdb.firebaseio.com",
+    "project_id": "mercadinho-utfpr",
+    "storage_bucket": "mercadinho-utfpr.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:461677073752:android:69bcb602e03ebc60d5012d",
+        "mobilesdk_app_id": "1:395683732236:android:625210387cbbeff57a8729",
         "android_client_info": {
           "package_name": "com.example.projeto_mercadinho"
         }
       },
       "oauth_client": [
         {
-          "client_id": "461677073752-renlvfvha2i19n6eaq3vi5negmao594r.apps.googleusercontent.com",
+          "client_id": "395683732236-4ufuige5e7scsnmjqrjbjgfgdiumpt4v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCwkH05aMx3lbjY9sh7mX-7ORQD7Rw0QU0"
+          "current_key": "AIzaSyBJjXZd1v-SOVOKepyOgF_SSUldnL47sGU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "461677073752-renlvfvha2i19n6eaq3vi5negmao594r.apps.googleusercontent.com",
+              "client_id": "395683732236-4ufuige5e7scsnmjqrjbjgfgdiumpt4v.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

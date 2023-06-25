@@ -20,7 +20,6 @@ class CarrinhoRepository extends ChangeNotifier {
           int estoqueAtual = produtoEstoque['quantidade'];
           if (estoqueAtual >= quantidade) {
             int novoEstoque = estoqueAtual - quantidade;
-            print('entrou no if');
 
             await txn.update(
               'produto',

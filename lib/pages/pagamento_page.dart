@@ -6,6 +6,10 @@ import 'package:projeto_mercadinho/pages/editar_dados_page.dart';
 
 // ignore: camel_case_types
 class Pagamento_Page extends StatelessWidget {
+  final String mercado;
+
+  Pagamento_Page({required this.mercado});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +21,8 @@ class Pagamento_Page extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Home_Page()),
+              MaterialPageRoute(
+                  builder: (context) => Home_Page(mercado: mercado)),
             );
           },
           icon: Icon(Icons.arrow_back),
@@ -36,16 +41,20 @@ class Pagamento_Page extends StatelessWidget {
             ),
           ),
         ],
-        backgroundColor: Colors.yellow,
+        backgroundColor:
+            mercado == "UTFPR" ? Colors.yellow.shade400 : Colors.blue.shade400,
       ),
-      body: const MyStatefulWidget(),
-      backgroundColor: Colors.yellow.shade200,
+      body: MyStatefulWidget(mercado: mercado),
+      backgroundColor:
+          mercado == "UTFPR" ? Colors.yellow.shade200 : Colors.blue.shade200,
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.yellow,
+            color: mercado == "UTFPR"
+                ? Colors.yellow.shade200
+                : Colors.blue.shade200,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -55,7 +64,7 @@ class Pagamento_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Home_Page(),
+                      builder: (context) => Home_Page(mercado: mercado),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -94,7 +103,7 @@ class Pagamento_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CarrinhoPage(),
+                      builder: (context) => CarrinhoPage(mercado: mercado),
                     ),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
@@ -133,7 +142,9 @@ class Pagamento_Page extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Editar_Dados_Page()),
+                        builder: (context) => Editar_Dados_Page(
+                              mercado: mercado,
+                            )),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone
                 },
@@ -209,7 +220,9 @@ class Pagamento_Page extends StatelessWidget {
 }
 
 class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
+  final String mercado;
+
+  const MyStatefulWidget({Key? key, required this.mercado}) : super(key: key);
 
   @override
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
@@ -221,12 +234,14 @@ enum Pagar { cartao, saldo, pix }
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   Pagar? _pagar = Pagar.cartao;
 
-  final yellowBoxDecoration = BoxDecoration(
-    color: Colors.yellow.shade200,
-  );
-
   @override
   Widget build(BuildContext context) {
+    final yellowBoxDecoration = BoxDecoration(
+      color: widget.mercado == "UTFPR"
+          ? Colors.yellow.shade200
+          : Colors.blue.shade200,
+    );
+
     return Container(
       padding: EdgeInsets.all(16),
       child: ListView(children: [
@@ -246,7 +261,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     height: 1,
                     fontSize: 26.18,
                     fontWeight: FontWeight.bold,
-                    backgroundColor: Colors.yellow.shade200),
+                    backgroundColor: widget.mercado == "UTFPR"
+                        ? Colors.yellow.shade200
+                        : Colors.blue.shade200),
               ),
               SizedBox(
                 width: 380.0,
@@ -256,11 +273,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 ),
               ),
               ListTile(
-                tileColor: Colors.yellow.shade200,
+                tileColor: widget.mercado == "UTFPR"
+                    ? Colors.yellow.shade200
+                    : Colors.blue.shade200,
                 title: const Text('Cartão'),
                 leading: Radio<Pagar>(
                   fillColor:
-                      MaterialStateColor.resolveWith((states) => Colors.amber),
+                      MaterialStateColor.resolveWith((states) => Colors.black),
                   value: Pagar.cartao,
                   groupValue: _pagar,
                   onChanged: (Pagar? value) {
@@ -272,11 +291,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 trailing: Icon(Icons.credit_card),
               ),
               ListTile(
-                tileColor: Colors.yellow.shade200,
+                tileColor: widget.mercado == "UTFPR"
+                    ? Colors.yellow.shade200
+                    : Colors.blue.shade200,
                 title: const Text('Pix'),
                 leading: Radio<Pagar>(
                   fillColor:
-                      MaterialStateColor.resolveWith((states) => Colors.amber),
+                      MaterialStateColor.resolveWith((states) => Colors.black),
                   value: Pagar.pix,
                   groupValue: _pagar,
                   onChanged: (Pagar? value) {
@@ -288,11 +309,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 trailing: Icon(Icons.pix_outlined),
               ),
               ListTile(
-                tileColor: Colors.yellow.shade200,
+                tileColor: widget.mercado == "UTFPR"
+                    ? Colors.yellow.shade200
+                    : Colors.blue.shade200,
                 title: const Text('Saldo'),
                 leading: Radio<Pagar>(
                   fillColor:
-                      MaterialStateColor.resolveWith((states) => Colors.amber),
+                      MaterialStateColor.resolveWith((states) => Colors.black),
                   value: Pagar.saldo,
                   groupValue: _pagar,
                   onChanged: (Pagar? value) {
@@ -317,7 +340,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           style: ButtonStyle(
             padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(1)),
             backgroundColor: MaterialStatePropertyAll<Color>(
-              Colors.amber,
+              widget.mercado == "UTFPR" ? Colors.amber : Colors.blue,
             ),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
@@ -329,7 +352,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Home_Page()),
+              MaterialPageRoute(
+                  builder: (context) => Home_Page(
+                        mercado: widget.mercado,
+                      )),
             );
           },
           child: Row(

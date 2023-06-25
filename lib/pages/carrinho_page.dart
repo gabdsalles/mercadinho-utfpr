@@ -8,7 +8,9 @@ import 'pagamento_page.dart';
 import 'home_page.dart';
 
 class CarrinhoPage extends StatefulWidget {
-  const CarrinhoPage({Key? key}) : super(key: key);
+  final String mercado;
+
+  const CarrinhoPage({Key? key, required this.mercado}) : super(key: key);
 
   @override
   State<CarrinhoPage> createState() => _CarrinhoPageState();
@@ -34,7 +36,8 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Home_Page()),
+              MaterialPageRoute(
+                  builder: (context) => Home_Page(mercado: widget.mercado)),
             );
           },
           icon: Icon(Icons.arrow_back),
@@ -55,7 +58,9 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
             ),
           ),
         ],
-        backgroundColor: Colors.yellow.shade400,
+        backgroundColor: widget.mercado == "UTFPR"
+            ? Colors.yellow.shade400
+            : Colors.lightBlue.shade400,
       ),
       body: ListView.separated(
         itemBuilder: (BuildContext context, int produto) {
@@ -176,7 +181,8 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Pagamento_Page(),
+                        builder: (context) =>
+                            Pagamento_Page(mercado: widget.mercado),
                       ),
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -186,7 +192,9 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                     // Ação do botão
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amber.shade300,
+                    backgroundColor: widget.mercado == "UTFPR"
+                        ? Colors.amber.shade300
+                        : Colors.blue.shade300,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40),
                     ),
