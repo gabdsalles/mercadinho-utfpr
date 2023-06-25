@@ -58,8 +58,8 @@ class LocationController extends ChangeNotifier {
     final url =
         '$apiUrl?units=metric&origins=$origin&destinations=${destinations.join('|')}&key=$apiKey';
 
-    print(origin);
-    print(destinations);
+    //print(origin);
+    //print(destinations);
 
     //solicitação para a API
     final response = await http.get(Uri.parse(url));
@@ -74,7 +74,7 @@ class LocationController extends ChangeNotifier {
         distances.add(distanceValue);
       }
 
-      print(distances);
+      //print(distances);
 
       return menorDistancia(distances);
     } else {

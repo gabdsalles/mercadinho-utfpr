@@ -1,38 +1,75 @@
-// ignore_for_file: camel_case_types, must_be_immutable
+// ignore_for_file: camel_case_types
 
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:projeto_mercadinho/pages/opcoes_pagamento_page.dart';
 import 'package:provider/provider.dart';
-
 import '../models/cadastrar.dart';
 import '../repositories/cadastro_repository.dart';
 import 'home_page.dart';
 
-class Editar_Dados_Page extends StatelessWidget {
-  //final  dropValue = ValueNotifier('');
-  //final dropOpcoes = ['Alterar dados da conta', 'Adicionar saldo', 'Sair'];
-  late CadastroRepository cadastro;
+class Editar_Dados_Page extends StatefulWidget {
   final String mercado;
 
-  Editar_Dados_Page({required this.mercado});
+  const Editar_Dados_Page({Key? key, required this.mercado}) : super(key: key);
+  @override
+  _EditarDadosPageState createState() => _EditarDadosPageState();
+}
 
+class _EditarDadosPageState extends State<Editar_Dados_Page> {
   final _form = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _senha = TextEditingController();
   final _confirmarSenha = TextEditingController();
   final _nome = TextEditingController();
   final _curso = TextEditingController();
-  final _imagem = TextEditingController();
+  File? _imagem;
+
+  Uint8List? _imagemBytes;
+  String? _imagemString = "";
+  bool _isPasswordVisible = false;
+  double borda = 25.0, altura = 70.0, largura = 300.0;
+
+  @override
+  void initState() {
+    super.initState();
+    imagemString();
+  }
 
   editarUser(Cadastrar cadastrar, BuildContext context) {
     if (_form.currentState!.validate()) {
+      final cadastro = context.read<CadastroRepository>();
       cadastro.editarCadastro(cadastrar, context);
+    }
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedImage = await ImagePicker().pickImage(source: source);
+    if (pickedImage != null) {
+      setState(() {
+        _imagem = File(pickedImage.path);
+      });
+    }
+  }
+
+  Future<void> imagemString() async {
+    CadastroRepository cadastroRepository = CadastroRepository();
+    _imagemString = await cadastroRepository.acharImagem();
+    if (_imagemString != null) {
+      //print("A imagem em bytes é a seguinte: " + _imagemString.toString());
+      setState(() {
+        _imagemBytes = base64Decode(_imagemString!);
+      });
+    } else {
+      print("Imagem não encontrada");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    cadastro = context.watch<CadastroRepository>();
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -43,26 +80,14 @@ class Editar_Dados_Page extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => Home_Page(mercado: mercado)),
+                  builder: (context) => Home_Page(
+                        mercado: widget.mercado,
+                      )),
             );
           },
           icon: Icon(Icons.arrow_back),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Hero(
-              tag: 'foto_perfil',
-              child: GestureDetector(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(60),
-                  child: Image.asset('images/foto_perfil.png'),
-                ),
-              ),
-            ),
-          ),
-        ],
-        backgroundColor: mercado == "UTFPR"
+        backgroundColor: widget.mercado == "UTFPR"
             ? Colors.yellow.shade400
             : Colors.lightBlue.shade400,
       ),
@@ -73,17 +98,22 @@ class Editar_Dados_Page extends StatelessWidget {
             key: _form,
             child: Column(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(bottom: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                if (_imagemBytes != null)
+                  Container(
+                    height: 180,
+                    width: 180,
+                    child: ClipOval(
+                      child: Image.memory(
+                        _imagemBytes!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                ),
+                SizedBox(height: 24),
                 Container(
-                  height: 75,
-                  width: 300,
-                  child: new TextFormField(
+                  height: altura,
+                  width: largura,
+                  child: TextFormField(
                     controller: _nome,
                     style: TextStyle(
                       fontSize: 20,
@@ -95,22 +125,27 @@ class Editar_Dados_Page extends StatelessWidget {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
+                        borderRadius: BorderRadius.circular(borda),
                       ),
                       labelText: 'Nome',
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Icon(Icons.person),
+                      ),
                     ),
                     keyboardType: TextInputType.name,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Campo de Nome em branco !';
+                      if (value == null || value.isEmpty) {
+                        return 'Campo obrigatório';
                       }
                       return null;
                     },
                   ),
                 ),
+                SizedBox(height: 10),
                 Container(
-                  height: 75,
-                  width: 300,
+                  height: altura,
+                  width: largura,
                   child: TextFormField(
                     controller: _curso,
                     style: TextStyle(
@@ -123,22 +158,27 @@ class Editar_Dados_Page extends StatelessWidget {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
+                        borderRadius: BorderRadius.circular(borda),
                       ),
                       labelText: 'Curso',
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Icon(Icons.school),
+                      ),
                     ),
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.name,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Campo de Curso em branco !';
+                      if (value == null || value.isEmpty) {
+                        return 'Campo obrigatório';
                       }
                       return null;
                     },
                   ),
                 ),
+                SizedBox(height: 10),
                 Container(
-                  height: 75,
-                  width: 300,
+                  height: altura,
+                  width: largura,
                   child: TextFormField(
                     controller: _email,
                     style: TextStyle(
@@ -151,22 +191,30 @@ class Editar_Dados_Page extends StatelessWidget {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
+                        borderRadius: BorderRadius.circular(borda),
                       ),
-                      labelText: 'Email',
+                      labelText: 'E-mail',
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Icon(Icons.email),
+                      ),
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Campo de Email em branco !';
+                      if (value == null || value.isEmpty) {
+                        return 'Campo obrigatório';
+                      }
+                      if (!value.contains('@')) {
+                        return 'E-mail inválido';
                       }
                       return null;
                     },
                   ),
                 ),
+                SizedBox(height: 10),
                 Container(
-                  height: 75,
-                  width: 300,
+                  height: altura,
+                  width: largura,
                   child: TextFormField(
                     controller: _senha,
                     style: TextStyle(
@@ -179,22 +227,42 @@ class Editar_Dados_Page extends StatelessWidget {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
+                        borderRadius: BorderRadius.circular(borda),
                       ),
                       labelText: 'Senha',
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Icon(Icons.lock),
+                      ),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                        child: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                      ),
                     ),
-                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: !_isPasswordVisible,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Campo de Senha em branco !';
+                      if (value == null || value.isEmpty) {
+                        return 'Campo obrigatório';
+                      }
+                      if (value.length < 6) {
+                        return 'Senha deve ter no mínimo 6 caracteres';
                       }
                       return null;
                     },
                   ),
                 ),
+                SizedBox(height: 10),
                 Container(
-                  height: 75,
-                  width: 300,
+                  height: altura,
+                  width: largura,
                   child: TextFormField(
                     controller: _confirmarSenha,
                     style: TextStyle(
@@ -203,55 +271,53 @@ class Editar_Dados_Page extends StatelessWidget {
                     ),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(20.0),
-                      filled: true, //<-- SEE HERE
+                      filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
+                        borderRadius: BorderRadius.circular(borda),
                       ),
                       labelText: 'Confirmar Senha',
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Icon(Icons.lock),
+                      ),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                        child: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                      ),
                     ),
-                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: !_isPasswordVisible,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Campo de Confirmar Senha em branco !';
+                      if (value == null || value.isEmpty) {
+                        return 'Campo obrigatório';
+                      }
+                      if (value != _senha.text) {
+                        return 'Senhas não correspondem';
                       }
                       return null;
                     },
                   ),
                 ),
-                Container(
-                  height: 75,
-                  width: 300,
-                  child: TextFormField(
-                    controller: _imagem,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(20.0),
-                      filled: true, //<-- SEE HERE
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
-                      ),
-                      labelText: 'Imagem',
-                    ),
-                    keyboardType: TextInputType.url,
-                  ),
-                ),
+                SizedBox(height: 10),
               ],
             ),
           ),
           Container(
-            width: 250,
+            width: 300,
             alignment: Alignment.bottomCenter,
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(
-                  mercado == "UTFPR"
+                  widget.mercado == "UTFPR"
                       ? Colors.amber.shade300
                       : Colors.blue.shade300,
                 ),
@@ -265,15 +331,18 @@ class Editar_Dados_Page extends StatelessWidget {
               onPressed: () {
                 if (_senha.value == _confirmarSenha.value) {
                   Cadastrar cadastrar = Cadastrar(
-                      nome: _nome.text,
-                      ra: '1',
-                      curso: _curso.text,
-                      email: _email.text,
-                      senha: _senha.text,
-                      imagem: _imagem.text,
-                      log: 0,
-                      saldo: 0.0,
-                      numero: 0);
+                    nome: _nome.text,
+                    ra: '1',
+                    curso: _curso.text,
+                    email: _email.text,
+                    senha: _senha.text,
+                    imagem: _imagem != null
+                        ? base64Encode(_imagem!.readAsBytesSync())
+                        : null,
+                    log: 0,
+                    saldo: 0.0,
+                    numero: 0,
+                  );
 
                   // Mostra o coteudo do Carrinho_Page
                   editarUser(cadastrar, context);
@@ -286,7 +355,7 @@ class Editar_Dados_Page extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => Home_Page(
-                              mercado: mercado,
+                              mercado: widget.mercado,
                             )),
                   );
                 } else {
@@ -299,7 +368,7 @@ class Editar_Dados_Page extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => Editar_Dados_Page(
-                              mercado: mercado,
+                              mercado: widget.mercado,
                             )),
                   );
                 }
@@ -320,7 +389,7 @@ class Editar_Dados_Page extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: mercado == "UTFPR"
+      backgroundColor: widget.mercado == "UTFPR"
           ? Colors.yellow.shade100
           : Colors.lightBlue.shade100,
       bottomNavigationBar: BottomAppBar(
@@ -328,7 +397,7 @@ class Editar_Dados_Page extends StatelessWidget {
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: mercado == "UTFPR"
+            color: widget.mercado == "UTFPR"
                 ? Colors.yellow.shade400
                 : Colors.lightBlue.shade400,
           ),
@@ -341,7 +410,7 @@ class Editar_Dados_Page extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Home_Page(
-                        mercado: mercado,
+                        mercado: widget.mercado,
                       ),
                     ),
                   );
@@ -382,7 +451,7 @@ class Editar_Dados_Page extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => Opcoes_Pagamento_Page(
-                              mercado: mercado,
+                              mercado: widget.mercado,
                             )),
                   );
                   // adicione aqui o código a ser executado ao clicar no ícone

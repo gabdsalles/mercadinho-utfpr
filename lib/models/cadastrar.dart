@@ -4,7 +4,7 @@ class Cadastrar {
   String curso;
   String email;
   String senha;
-  String imagem;
+  String? imagem;
   int log;
   double saldo;
   int numero;
@@ -15,16 +15,14 @@ class Cadastrar {
     required this.curso,
     required this.email,
     required this.senha,
-    required this.imagem,
+    this.imagem,
     required this.log,
     required this.saldo,
     required this.numero,
   });
 
-
-  Map<String, dynamic> toMap(){
-  
-    return{
+  Map<String, dynamic> toMap() {
+    return {
       'nome': nome,
       'ra': ra,
       'curso': curso,
@@ -37,7 +35,7 @@ class Cadastrar {
     };
   }
 
-  factory Cadastrar.fromMap(Map<dynamic,dynamic> map){
+  factory Cadastrar.fromMap(Map<dynamic, dynamic> map) {
     return Cadastrar(
       nome: map['nome'],
       ra: map['ra'],
@@ -46,9 +44,8 @@ class Cadastrar {
       senha: map['senha'],
       imagem: map['imagem'],
       log: map['log'],
-      saldo: double.parse(map['saldo']),
+      saldo: map['saldo'].toDouble(),
       numero: map['numero'],
     );
-  } 
-
+  }
 }

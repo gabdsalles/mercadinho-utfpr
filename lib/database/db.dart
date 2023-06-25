@@ -8,24 +8,29 @@ class DB {
   static final DB instance = DB._();
   static Database? _database;
 
-  get database async {
-    if (_database != null) return _database;
-    return await _initDatabase();
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    _database = await _initDatabase();
+    return _database!;
   }
 
-  _initDatabase() async {
+  Future<Database> _initDatabase() async {
+    final String path = join(await getDatabasesPath(), 'teste3.db');
+
+    // Exclua o arquivo do banco de dados existente
+    //await deleteDatabase(path);
+
     return await openDatabase(
-      join(await getDatabasesPath(), 'teste3.db'),
-      version: 1,
+      path,
+      version: 1, // Defina a versão inicial do banco de dados
       onCreate: _onCreate,
     );
   }
 
-  _onCreate(db, versao) async {
+  Future<void> _onCreate(Database db, int version) async {
     await db.execute(_cadastro);
-    await db.execute(_produto2);
+    await db.execute(_produto);
     await db.execute(_carrinho);
-
     await _cadastrarProdutos(db);
   }
 
@@ -47,18 +52,7 @@ class DB {
   CREATE TABLE produto(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT,
-    icone TEXT,
-    quantidade INTEGER,
-    preco TEXT,
-    categoria TEXT,
-  );
-''';
-
-  String get _produto2 => '''
-  CREATE TABLE produto2(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT,
-    icone TEXT,
+    icone BLOB,
     quantidade INTEGER,
     preco TEXT,
     categoria TEXT,
@@ -70,7 +64,7 @@ class DB {
   CREATE TABLE carrinho(
     ra INTEGER PRIMARY KEY,
     nome TEXT,
-    icone TEXT,
+    icone BLOB,
     quantidade INTEGER,
     preco TEXT,
     categoria TEXT
@@ -81,7 +75,7 @@ class DB {
     List<Produto> lista = ProdutosRepository().produtos;
 
     for (Produto produto in lista) {
-      await db.insert('produto2', produto.toMap());
+      await db.insert('produto', produto.toMap());
     }
   }
 }

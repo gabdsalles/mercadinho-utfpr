@@ -3,22 +3,31 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/pages/cadastrar_page.dart';
 import 'package:projeto_mercadinho/pages/recuperar_senha_page.dart';
+import 'package:projeto_mercadinho/repositories/UserData.dart';
 import 'package:projeto_mercadinho/services/location_controller.dart';
 import 'package:provider/provider.dart';
-
 import '../repositories/cadastro_repository.dart';
 
 // ignore: camel_case_types
-class Login_Page extends StatelessWidget {
+class Login_Page extends StatefulWidget {
+  @override
+  Login_PageState createState() => Login_PageState();
+}
+
+// ignore: camel_case_types
+class Login_PageState extends State<Login_Page> {
   final _form = GlobalKey<FormState>();
   final _ra = TextEditingController();
   final _senha = TextEditingController();
+  bool _isPasswordVisible = false;
+  double borda = 25.0;
 
   late CadastroRepository cadastro;
   late LocationController location;
 
   logar(String ra, String senha, BuildContext context) async {
     if (_form.currentState!.validate()) {
+      UserData.ra = ra;
       cadastro.login(ra, senha, context, location);
     }
   }
@@ -70,9 +79,13 @@ class Login_Page extends StatelessWidget {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
+                        borderRadius: BorderRadius.circular(borda),
                       ),
-                      labelText: 'ra',
+                      labelText: 'RA',
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Icon(Icons.school),
+                      ),
                     ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
@@ -87,6 +100,7 @@ class Login_Page extends StatelessWidget {
                   height: 100,
                   width: 300,
                   child: TextFormField(
+                    obscureText: !_isPasswordVisible,
                     controller: _senha,
                     style: TextStyle(
                       fontSize: 20,
@@ -94,18 +108,37 @@ class Login_Page extends StatelessWidget {
                     ),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(20.0),
-                      filled: true, //<-- SEE HERE
+                      filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(60),
+                        borderRadius: BorderRadius.circular(borda),
                       ),
                       labelText: 'Senha',
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Icon(Icons.lock),
+                      ),
+                      suffixIcon: Padding(
+                        padding: EdgeInsets.only(right: 30),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                          child: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                        ),
+                      ),
                     ),
                     keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Campo de Senha em branco !';
+                        return 'Campo de Senha em branco!';
                       }
                       return null;
                     },
@@ -139,7 +172,7 @@ class Login_Page extends StatelessWidget {
                     padding: EdgeInsets.all(16),
                     child: Text(
                       'Login',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 25),
                     ),
                   )
                 ],

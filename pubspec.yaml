@@ -39,6 +39,8 @@ dependencies:
   sqflite: ^2.0.0+3
   firebase_auth: ^4.6.1
   quickalert: ^1.0.1
+  image_picker: ^0.8.9
+  image: ^4.0.17
   http: ^1.0.0
 
 dev_dependencies:

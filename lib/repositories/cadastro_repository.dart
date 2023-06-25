@@ -4,6 +4,7 @@ import 'package:projeto_mercadinho/database/db.dart';
 import 'package:projeto_mercadinho/pages/editar_dados_page.dart';
 import 'package:projeto_mercadinho/pages/opcoes_pagamento_page.dart';
 import 'package:projeto_mercadinho/pages/recuperar_senha_page.dart';
+import 'package:projeto_mercadinho/repositories/UserData.dart';
 import 'package:projeto_mercadinho/services/location_controller.dart';
 import 'package:sqflite/sqlite_api.dart';
 import '../models/cadastrar.dart';
@@ -65,11 +66,6 @@ class CadastroRepository extends ChangeNotifier {
       );
 
       if (result.isEmpty) {
-        /*       QuickAlert.show(
- context: context,
- type: QuickAlertType.error,
- text: 'Email ou senha errados',
-);*/
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ra ou senha errados!')),
@@ -85,16 +81,9 @@ class CadastroRepository extends ChangeNotifier {
           where: 'ra = ?',
           whereArgs: [ra],
         );
-/*
-                QuickAlert.show(
- context: context,
- type: QuickAlertType.success,
- text: 'Logado com sucesso!',
- 
-);*/
         Future<Position> posicaoAtual = location.getPosicaoAtual();
         mercado = await location.getMinimumDistanceMarket(posicaoAtual);
-        print("Mercado: " + mercado.toString());
+        //print("Mercado: " + mercado.toString());
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login realizado com sucesso!')),
@@ -339,5 +328,22 @@ class CadastroRepository extends ChangeNotifier {
       );
     });
     notifyListeners();
+  }
+
+  Future<String?> acharImagem() async {
+    db = await DB.instance.database;
+    List<Map<String, dynamic>> result = await db.query(
+      'cadastro',
+      where: 'ra = ?',
+      whereArgs: [UserData.ra],
+      limit: 1,
+    );
+
+    if (result.isNotEmpty) {
+      String? imagem = result[0]['imagem'];
+      return imagem;
+    } else {
+      return null;
+    }
   }
 }
