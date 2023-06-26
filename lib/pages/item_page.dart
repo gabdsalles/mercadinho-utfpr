@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../pages/carrinho_page.dart';
 import '../models/produto.dart';
 
-import 'package:social_share/social_share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ItemPage extends StatelessWidget {
   final Produto produto;
@@ -21,8 +21,9 @@ class ItemPage extends StatelessWidget {
       : super(key: key);
 
   void compartilharPreco() {
-    SocialShare.shareOptions(
-        "Confira o preço do ${produto.nome} agora: ${produto.preco}");
+    //SocialShare.shareOptions(
+    //"Confira o preço do ${produto.nome} agora: ${produto.preco}");
+    Share.share("Confira o preço do ${produto.nome} agora: ${produto.preco}");
   }
 
   @override
