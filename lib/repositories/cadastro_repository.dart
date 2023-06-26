@@ -13,6 +13,8 @@ import '../pages/cadastrar_page.dart';
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
 
+import 'package:vibration/vibration.dart';
+
 //import '../models/cadastrar.dart';
 
 class CadastroRepository extends ChangeNotifier {
@@ -41,6 +43,7 @@ class CadastroRepository extends ChangeNotifier {
           MaterialPageRoute(builder: (context) => Login_Page()),
         );
       } else {
+        Vibration.vibrate();
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Já exite um cadastro com este RA!')),
@@ -66,6 +69,7 @@ class CadastroRepository extends ChangeNotifier {
       );
 
       if (result.isEmpty) {
+        Vibration.vibrate();
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ra ou senha errados!')),
@@ -161,6 +165,7 @@ class CadastroRepository extends ChangeNotifier {
  type: QuickAlertType.error,
  text: 'Email ou senha errados',
 );*/
+        Vibration.vibrate();
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Email ou ra errados!')),
@@ -208,6 +213,7 @@ class CadastroRepository extends ChangeNotifier {
       );
 
       if (result.isEmpty) {
+        Vibration.vibrate();
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Impossível eidtar os dados do cadastro')),
@@ -249,6 +255,7 @@ class CadastroRepository extends ChangeNotifier {
       );
 
       if (result.isEmpty) {
+        Vibration.vibrate();
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Impossível adicionar saldo')),
@@ -298,6 +305,7 @@ class CadastroRepository extends ChangeNotifier {
       );
 
       if (result.isEmpty) {
+        Vibration.vibrate();
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Impossível adicionar cartao')),

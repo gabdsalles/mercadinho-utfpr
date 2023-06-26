@@ -211,8 +211,8 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            Pagamento_Page(mercado: widget.mercado),
+                        builder: (context) => Pagamento_Page(
+                            mercado: widget.mercado, valor: valorTotal),
                       ),
                     );
                     ScaffoldMessenger.of(context).showSnackBar(

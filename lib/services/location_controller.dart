@@ -46,9 +46,10 @@ class LocationController extends ChangeNotifier {
 
     final apiKey = 'AIzaSyA28tKLZQNbPBybcV-HQwldHKyb2hc4cSs';
     final apiUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json';
+    //final origin =
+    //"Tozetto Jardim Carvalho"; //se vc está no emulador, é só colocar o lugar que vc quiser, desde que seja em pg (ou no brasil, pelo menos)
     final origin =
-        "Tozetto Jardim Carvalho"; //se vc está no emulador, é só colocar o lugar que vc quiser, desde que seja em pg (ou no brasil, pelo menos)
-    //final origin = '$latitude,$longitude'; //para testar no dispositivo físico. aqui realmente pega a localização
+        '$latitude,$longitude'; //para testar no dispositivo físico. aqui, realmente pega a localização
     final destinations = [
       "UTFPR - Ponta Grossa",
       "UEPG - Universidade Estadual de Ponta Grossa",

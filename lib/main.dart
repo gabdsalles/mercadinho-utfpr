@@ -9,6 +9,8 @@ import 'meuaplicativo.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'models/produto.dart';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
+
 void writeData() {
   DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
 
@@ -27,6 +29,18 @@ void writeData() {
 }
 
 void main() async {
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic notifications',
+        channelDescription: 'Notification channel for basic tests',
+      ),
+    ],
+    debug: true,
+  );
+
   WidgetsFlutterBinding.ensureInitialized();
 
   if (Firebase.apps.isEmpty) {

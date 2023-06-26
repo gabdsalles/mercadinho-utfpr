@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import '../pages/carrinho_page.dart';
 import '../models/produto.dart';
 
+import 'package:social_share/social_share.dart';
+
 class ItemPage extends StatelessWidget {
   final Produto produto;
   final String mercado;
@@ -17,6 +19,11 @@ class ItemPage extends StatelessWidget {
 
   ItemPage({Key? key, required this.produto, required this.mercado})
       : super(key: key);
+
+  void compartilharPreco() {
+    SocialShare.shareOptions(
+        "Confira o preço do ${produto.nome} agora: ${produto.preco}");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +39,12 @@ class ItemPage extends StatelessWidget {
         backgroundColor: mercado == "UTFPR"
             ? Colors.yellow.shade400
             : Colors.lightBlue.shade400,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () => compartilharPreco(),
+          )
+        ],
       ),
       body: ListView(
         children: [

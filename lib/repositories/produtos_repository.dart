@@ -151,18 +151,6 @@ class ProdutosRepository extends ChangeNotifier {
         mercado: "UEPG"),
   ];
 
-  String get _produto2 => '''
-  CREATE TABLE produto2(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT,
-    icone TEXT,
-    quantidade INTEGER,
-    preco TEXT,
-    categoria TEXT,
-    mercado TEXT
-  );
-  ''';
-
   Future<void> inserirProdutos() async {
     db = await DB.instance.database;
 

@@ -4,11 +4,13 @@ import '../pages/carrinho_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:projeto_mercadinho/pages/editar_dados_page.dart';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
+
 // ignore: camel_case_types
 class Pagamento_Page extends StatelessWidget {
   final String mercado;
-
-  Pagamento_Page({required this.mercado});
+  final double valor;
+  Pagamento_Page({required this.mercado, required this.valor});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,10 @@ class Pagamento_Page extends StatelessWidget {
         backgroundColor:
             mercado == "UTFPR" ? Colors.yellow.shade400 : Colors.blue.shade400,
       ),
-      body: MyStatefulWidget(mercado: mercado),
+      body: MyStatefulWidget(
+        mercado: mercado,
+        valor: valor,
+      ),
       backgroundColor:
           mercado == "UTFPR" ? Colors.yellow.shade200 : Colors.blue.shade200,
       bottomNavigationBar: BottomAppBar(
@@ -221,8 +226,9 @@ class Pagamento_Page extends StatelessWidget {
 
 class MyStatefulWidget extends StatefulWidget {
   final String mercado;
-
-  const MyStatefulWidget({Key? key, required this.mercado}) : super(key: key);
+  final double valor;
+  const MyStatefulWidget({Key? key, required this.mercado, required this.valor})
+      : super(key: key);
 
   @override
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
@@ -350,6 +356,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
           ),
           onPressed: () {
+            triggerNotification(_pagar);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -373,5 +380,38 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         ),
       ]),
     );
+  }
+
+  void triggerNotification(Pagar? _pagar) {
+    if (_pagar == Pagar.cartao) {
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 10,
+          channelKey: 'basic_channel',
+          title: 'Compra Realizada com o cartão',
+          body: 'Obrigado por comprar ' + widget.valor.toString(),
+        ),
+      );
+    }
+    if (_pagar == Pagar.pix) {
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 10,
+          channelKey: 'basic_channel',
+          title: 'Compra Realizada com o pix',
+          body: 'Obrigado por comprar ' + widget.valor.toString(),
+        ),
+      );
+    }
+    if (_pagar == Pagar.saldo) {
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 10,
+          channelKey: 'basic_channel',
+          title: 'Compra Realizada com o saldo',
+          body: 'Obrigado por comprar ' + widget.valor.toString(),
+        ),
+      );
+    }
   }
 }

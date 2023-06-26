@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:vibration/vibration.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_mercadinho/pages/cadastrar_page.dart';
 import 'package:projeto_mercadinho/pages/recuperar_senha_page.dart';
@@ -90,6 +91,7 @@ class Login_PageState extends State<Login_Page> {
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value!.isEmpty) {
+                        Vibration.vibrate();
                         return 'Campo de RA em branco !';
                       }
                       return null;
@@ -138,6 +140,7 @@ class Login_PageState extends State<Login_Page> {
                     keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value!.isEmpty) {
+                        Vibration.vibrate();
                         return 'Campo de Senha em branco!';
                       }
                       return null;

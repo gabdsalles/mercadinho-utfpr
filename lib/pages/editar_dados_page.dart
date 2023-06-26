@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:projeto_mercadinho/pages/opcoes_pagamento_page.dart';
 import 'package:provider/provider.dart';
 import '../models/cadastrar.dart';
@@ -43,15 +42,6 @@ class _EditarDadosPageState extends State<Editar_Dados_Page> {
     if (_form.currentState!.validate()) {
       final cadastro = context.read<CadastroRepository>();
       cadastro.editarCadastro(cadastrar, context);
-    }
-  }
-
-  Future<void> _pickImage(ImageSource source) async {
-    final pickedImage = await ImagePicker().pickImage(source: source);
-    if (pickedImage != null) {
-      setState(() {
-        _imagem = File(pickedImage.path);
-      });
     }
   }
 

@@ -43,6 +43,31 @@ dependencies:
   image: ^4.0.17
   http: ^1.0.0
 
+  flutter_native_splash: ^2.3.1
+  flutter_launcher_icons: ^0.13.1
+
+  awesome_notifications: ^0.7.4+1
+
+  social_share: ^2.3.1 
+
+  vibration:
+
+flutter_native_splash:
+  color: "#ffee58"
+  image: "images/splash.png"
+  image_android: images/splash.png
+  color_android: "#ffee58"
+  android_12:
+    image: "images/splash.png"
+  android: true
+ 
+flutter_launcher_icons:
+  image_path: "images/icone.png"
+  android: "launcher_icon"
+  adaptive_icon_background: "#ffee58"
+  adaptative_icon_foreground: "images/icone.png"
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
